@@ -1,17 +1,48 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import SearchInput from './searchInput';
+import ThemoviedbAPI from './services/api';
+import Movies from './movies';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+
+class App extends React.Component{
+   apiService = new ThemoviedbAPI()
+
+  state = {
+    filmsList:[]
+  }
+
+  // componentDidMount(){
+  //   this.updateFilms('matrix')
+  // }
+
+ updateFilms=(searchList)=>{
+   this.apiService.getResourse(searchList).then((res) =>{
+   this.setState({
+   filmsList:[...res.results]
+   
+  })   
+  // console.log(this.state.filmsList)
+ })
+ }
+ 
+
+
+render() {
+  return(
+    <div>
+    <SearchInput updateFilms={this.updateFilms}/>
+    <Movies filmsList = {this.state.filmsList}/>
+    </div>
+ 
+
+  )
+
+}
+  
+}
+
+ReactDOM.render(<App />, document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
