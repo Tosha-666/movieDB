@@ -34,8 +34,8 @@
   margin: 10px;
 }
 .layout .image {
-  height: 100%;
-  max-width: 50%;
+  height: 281px;
+  max-width: 183px;
 }
 .layout .description {
   display: flex;

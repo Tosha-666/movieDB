@@ -12,9 +12,6 @@ class App extends React.Component{
     filmsList:[]
   }
 
-  // componentDidMount(){
-  //   this.updateFilms('matrix')
-  // }
 
  updateFilms=(searchList)=>{
    this.apiService.getResourse(searchList).then((res) =>{
@@ -22,7 +19,7 @@ class App extends React.Component{
    filmsList:[...res.results]
    
   })   
-  // console.log(this.state.filmsList)
+  console.log(this.state.filmsList)
  })
  }
  
