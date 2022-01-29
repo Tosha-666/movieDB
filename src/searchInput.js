@@ -1,41 +1,43 @@
-import React from 'react';
-import debounce from 'lodash.debounce';
+import React from 'react'
+import debounce from 'lodash.debounce'
 
+export default class SearchInput extends React.Component {
+  state = { value: '' }
 
+  addSearchValue = this.props.addSearchValue
 
-export default class SearchInput extends React.Component{
-    state = { value: '' }
-    
-    updateFilms = this.props.updateFilms
+  loadingFunc = this.props.loadingFunc
 
-    loadingFunc = this.props.loadingFunc
-
-    
-    onLabelChange = (e) => {
-      this.setState({
+  onLabelChange = (e) => {
+    this.setState(
+      {
         value: e.target.value,
-      }, (debounce(()=>this.updateFilms(this.state.value), 700))
-      )
-    }
+      },
+      debounce(() => this.addSearchValue(this.state.value), 700)
+    )
 
+  }
+
+  handleClick = (e) => {
+    this.onLabelChange(e)
+    this.loadingFunc(this.state.value)
+
+  }
 
   // debounce = require('lodash.debounce');
 
   // event => this.setState({value: event.target.value})
 
-    render() {
+  render() {
+const {value} = this.state
+    return (
+      <input
+        value={value}
+        type="text"
+        className="search-bar"
+        onChange={this.handleClick}
+      />
 
-      return (
-
-        // <form onSubmit={this.onSubmiteForm}>
-          <input
-            value={this.state.value}
-            type="text"
-            className="search-bar"
-            onChange={this.onLabelChange}
-            
-          />
-        // </form>
-      )
-    }
+    )
+  }
 }
