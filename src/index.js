@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Spin, Alert, Pagination } from 'antd'
+import { Spin, Alert } from 'antd'
 import SearchInput from './searchInput'
 import ThemoviedbAPI from './services/api'
 import Movies from './movies'
+import Paginate from './pagination'
 import 'antd/dist/antd.css'
 
 class App extends React.Component {
@@ -13,8 +14,9 @@ class App extends React.Component {
     label:'',
     filmsList: [],
     loading: false,
-    error: ' ',
-    pageNumber:1
+    error: '',
+    pageNumber:1,
+    totalPages:0
   }
 
   onError = (err) => {
@@ -30,9 +32,10 @@ class App extends React.Component {
   
   addSearchValue = (searchValue)=>{
     this.setState({
-      value:searchValue
+      value:searchValue,
+      pageNumber:1
     },(()=> this.updateFilms(this.state.value, this.state.pageNumber)))
-   
+   console.log(this.state);
   }
 
   updateFilms = (searchList, pageNumber=1) => {
@@ -42,6 +45,7 @@ class App extends React.Component {
         this.setState({
           filmsList: [...res.results],
           loading: false,
+          totalPages:res.total_pages
         })
         // console.log(this.state)
       })
@@ -72,30 +76,24 @@ class App extends React.Component {
           return null 
       }
     }
-
   
-    // showTotal(total) {
-    //   return `Total ${total} items`;
-    // }
-
-    onchangePagination=(page)=>{
+      onchangePagination=(page)=>{
       this.setState({
         pageNumber:page
       }, 
       (()=> this.updateFilms(this.state.value, this.state.pageNumber)))
          }
 
-  showTotal =(total)=>`Total ${total} items`
-      
+      showTotal =(total)=>`Total ${total} pages`
 
   render() {
-    const { filmsList, loading, error } = this.state
-    const {pageNumber} = this.state
+    const { filmsList, loading, error, pageNumber, totalPages } = this.state
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
-    
+
+
     return (
       
-      <div>
+      <main>
         <SearchInput
           addSearchValue = {this.addSearchValue}
           loadingFunc={this.loadingFunc}
@@ -104,15 +102,16 @@ class App extends React.Component {
         <Movies filmsList={filmsList} />
         {spinner}
         {this.warningMessage(error)}
-        <Pagination 
-        onChange={this.onchangePagination}
-        size='small'
-        defaultCurrent={1} 
-        total={10} 
-        defaultPageSize = {1}
-        showTotal={this.showTotal}
-        />,
-      </div>
+        <Paginate
+         pageNumber={pageNumber}
+         onchangePagination = {this.onchangePagination}
+         totalPages={totalPages} 
+         showTotal={this.showTotal}
+         error = {error}
+         filmsList = {filmsList}
+        />
+
+      </main>
     )
   }
 }
