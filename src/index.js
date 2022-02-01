@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Spin, Alert } from 'antd'
+import debounce from 'lodash.debounce'
+import Header from './movies/header'
 import SearchInput from './searchInput'
 import ThemoviedbAPI from './services/api'
 import Movies from './movies'
@@ -16,7 +18,8 @@ class App extends React.Component {
     loading: false,
     error: '',
     pageNumber:1,
-    totalPages:0
+    totalPages:0,
+    searhFilter:''
   }
 
   onError = (err) => {
@@ -28,14 +31,31 @@ class App extends React.Component {
     console.log(this.state)
   }
 
+  onLabelChange = (e) => {
+    this.setState(
+      {
+        value: e.target.value,
+        loading:true
+      },
+      debounce(() => this.addSearchValue(this.state.value), 700)
+    )
 
+  }
+
+  onchangeFilter = (e)=>{
+    this.setState({
+      searhFilter:e.target.value
+    })
+    // console.log(this.state);
+  }
   
   addSearchValue = (searchValue)=>{
     this.setState({
       value:searchValue,
-      pageNumber:1
+      pageNumber:1,
+      error:''
     },(()=> this.updateFilms(this.state.value, this.state.pageNumber)))
-   console.log(this.state);
+
   }
 
   updateFilms = (searchList, pageNumber=1) => {
@@ -53,15 +73,15 @@ class App extends React.Component {
       .catch(this.onError)
   }
 
-  loadingFunc = (value) => {
-    if (value) {
-      this.setState({
-        loading: true,
-      })
-    }
-    // console.log(this.state)
-    // console.log(value);
-  }
+  // loadingFunc = (value) => {
+  //   if (value) {
+  //     this.setState({
+  //       loading: true,
+  //     })
+  //   }
+  //   // console.log(this.state)
+  //   // console.log(value);
+  // }
 
   warningMessage = (er) => {
       switch (er) {
@@ -94,7 +114,10 @@ class App extends React.Component {
     return (
       
       <main>
+        <Header 
+        onchangeFilter = {this.onchangeFilter}/>
         <SearchInput
+          onLabelChange = {this.onLabelChange}
           addSearchValue = {this.addSearchValue}
           loadingFunc={this.loadingFunc}
           pageNumber={pageNumber}
