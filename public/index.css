@@ -6,6 +6,13 @@
   background-color: #e8e8ff;
   padding-top: 40px;
 }
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin: 5px;
+}
+
 .search-bar {
   display: block;
   width: 90%;
@@ -84,6 +91,10 @@
   line-height: 22px;
   color: #000000;
   margin-top: 10px;
+}
+
+.layout .description .rate {
+  margin-top: 5px;
 }
 
 .pagination-container {

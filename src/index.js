@@ -19,7 +19,8 @@ class App extends React.Component {
     error: '',
     pageNumber:1,
     totalPages:0,
-    searhFilter:''
+    searhFilter:'rated',
+    ratedFilms:[]
   }
 
   onError = (err) => {
@@ -46,7 +47,7 @@ class App extends React.Component {
     this.setState({
       searhFilter:e.target.value
     })
-    // console.log(this.state);
+    console.log(this.state);
   }
   
   addSearchValue = (searchValue)=>{
@@ -73,15 +74,6 @@ class App extends React.Component {
       .catch(this.onError)
   }
 
-  // loadingFunc = (value) => {
-  //   if (value) {
-  //     this.setState({
-  //       loading: true,
-  //     })
-  //   }
-  //   // console.log(this.state)
-  //   // console.log(value);
-  // }
 
   warningMessage = (er) => {
       switch (er) {
@@ -106,8 +98,25 @@ class App extends React.Component {
 
       showTotal =(total)=>`Total ${total} pages`
 
+      onchangeRate = (filmRate,filmId)=>{
+      this.setState(({ratedFilms})=>{
+      const newRatedFilm = {filmId, filmRate}
+      const newArr = [...ratedFilms, newRatedFilm]
+      return {
+        ratedFilms:newArr
+      }
+    })
+    console.log(this.state);
+  }
+      
+  componentDidUpdate(prevProps) {
+    const arr = prevProps.ratedFilms
+    
+    localStorage.setItem(prevProps.ratedFilms)
+  }
+
   render() {
-    const { filmsList, loading, error, pageNumber, totalPages } = this.state
+    const { filmsList, loading, error, pageNumber, totalPages, searhFilter } = this.state
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
 
 
@@ -115,14 +124,18 @@ class App extends React.Component {
       
       <main>
         <Header 
-        onchangeFilter = {this.onchangeFilter}/>
+        onchangeFilter = {this.onchangeFilter}
+        searhFilter = {searhFilter}
+        />
         <SearchInput
           onLabelChange = {this.onLabelChange}
           addSearchValue = {this.addSearchValue}
           loadingFunc={this.loadingFunc}
           pageNumber={pageNumber}
         />
-        <Movies filmsList={filmsList} />
+        <Movies 
+        filmsList={filmsList}
+        onchangeRate = {this.onchangeRate}/>
         {spinner}
         {this.warningMessage(error)}
         <Paginate
