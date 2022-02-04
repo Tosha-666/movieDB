@@ -1,12 +1,17 @@
 import React from 'react'
 import MovieCard from './movieCard'
 
-const Movies = function movies({ filmsList, onchangeRate}) {
+const Movies = function movies({ filmsList, onchangeRate }) {
   const elements = filmsList.map((film) => (
-    <MovieCard 
-    {...film} 
-    key={film.id}
-    onchangeRate ={onchangeRate} />
+    <MovieCard
+      title={film.title}
+      releaseDate={film.release_date}
+      overview={film.overview}
+      posterPath={film.poster_path}
+      key={film.id}
+      onchangeRate={onchangeRate}
+      id={film.id}
+    />
   ))
   return <div className="container">{elements}</div>
 }
