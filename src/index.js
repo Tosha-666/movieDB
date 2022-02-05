@@ -25,18 +25,25 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.updateRated()
+    // this.updateRated()
+          this.rateMenuSelection()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { ratedFilms } = this.state
+    const { ratedFilms, searhFilter } = this.state
     if (ratedFilms !== prevState.ratedFilms) {
       const arr = ratedFilms
       // console.log(arr);
       arr.forEach((element) => {
         localStorage.setItem(element.filmId, element.filmRate)
       })
-    }
+      
+      
+          }
+          if (searhFilter!==prevState.searhFilter){
+            this.rateMenuSelection()
+          }
+console.log(this.state);
   }
 
   onLabelChange = (e) => {
@@ -53,7 +60,7 @@ class App extends React.Component {
     this.setState({
       searhFilter: e.target.value,
     })
-    // console.log(this.state)
+    console.log(this.state)
   }
 
   addSearchValue = (searchValue) => {
@@ -143,6 +150,15 @@ class App extends React.Component {
     )
   }
 
+  rateMenuSelection =()=>{
+    if (this.state.searhFilter === 'rated') {
+     this.updateRated()
+    }
+    if (this.state.searhFilter === 'search') {
+      this.addSearchValue(this.state.value='')
+  }
+  }
+
   async updateRated() {
     const keys = Object.keys(localStorage)
     const arrofRatedMovies = []
@@ -154,6 +170,8 @@ class App extends React.Component {
       filmsList: await Promise.all(arrofRatedMovies),
     })
   }
+
+
 
   render() {
     const { filmsList, loading, error, pageNumber, totalPages, searhFilter } =
