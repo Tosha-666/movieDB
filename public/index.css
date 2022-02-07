@@ -62,6 +62,7 @@
   font-weight: normal;
   font-size: 20px;
   line-height: 28px;
+  max-width: 215px;
 }
 
 .layout .description .date {
@@ -93,6 +94,42 @@
   margin-top: 10px;
 }
 
+.ant-rate-star {
+  margin-right: 3px !important;
+}
+.layout .description .rate-round {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #e9d100;
+  border-radius: 50%;
+  position: absolute;
+  right: 9px;
+  top: 12px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layout .description .red {
+  border: 2px solid #e90000;
+}
+
+.layout .description .orange {
+  border: 2px solid #e97e00;
+}
+
+.layout .description .yellow {
+  border: 2px solid #e9d100;
+}
+
+.layout .description .green {
+  border: 2px solid #66e900;
+}
 .layout .description .rate {
   margin-top: 5px;
 }

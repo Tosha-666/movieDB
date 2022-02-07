@@ -24,10 +24,17 @@ class App extends React.Component {
     ratedFilms: [],
   }
 
-  componentDidMount() {
+  
+  GenresContext = React.createContext(this.genres)
+
+
+    componentDidMount() {
     // this.updateRated()
           this.rateMenuSelection()
+          this.apiService.getGenres()
   }
+
+  
 
   componentDidUpdate(prevProps, prevState) {
     const { ratedFilms, searhFilter } = this.state
@@ -40,12 +47,15 @@ class App extends React.Component {
       
       
           }
-          if (searhFilter!==prevState.searhFilter){
+    if (searhFilter!==prevState.searhFilter){
             this.rateMenuSelection()
           }
-console.log(this.state);
+// console.log(this.state);
   }
 
+  
+  genres =()=> this.apiService.getGenres()
+  
   onLabelChange = (e) => {
     this.setState(
       {
@@ -60,10 +70,11 @@ console.log(this.state);
     this.setState({
       searhFilter: e.target.value,
     })
-    console.log(this.state)
+    // console.log(this.state)
   }
 
-  addSearchValue = (searchValue) => {
+
+  addSearchValue = (searchValue='') => {
     this.setState(
       {
         value: searchValue,
@@ -94,7 +105,12 @@ console.log(this.state);
       case '422':
         return <Alert message="Enter text to search" type="warning" closable />
       case 'not found':
-        return <Alert message="Films not found" type="warning" closable />
+        if (this.state.filmsList.length!==0){
+          return null
+         }
+         return <Alert 
+          message="Films not found" 
+          type="warning" closable />
       case 'Failed to fetch':
         return (
           <Alert
@@ -155,7 +171,7 @@ console.log(this.state);
      this.updateRated()
     }
     if (this.state.searhFilter === 'search') {
-      this.addSearchValue(this.state.value='')
+      this.addSearchValue(this.state.value)
   }
   }
 
@@ -168,13 +184,14 @@ console.log(this.state);
     }
     this.setState({
       filmsList: await Promise.all(arrofRatedMovies),
+      error:''
     })
   }
 
 
 
   render() {
-    const { filmsList, loading, error, pageNumber, totalPages, searhFilter } =
+    const { filmsList, loading, error, pageNumber, totalPages, searhFilter, value } =
       this.state
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
     const searchBar = () => {
@@ -188,22 +205,19 @@ console.log(this.state);
             addSearchValue={this.addSearchValue}
             loadingFunc={this.loadingFunc}
             pageNumber={pageNumber}
+            value = {value}
           />
         )
       }
       return null
     }
-    return (
-      <main>
-        <Header
-          onchangeFilter={this.onchangeFilter}
-          searhFilter={searhFilter}
-        />
-        {searchBar()}
-        <Movies filmsList={filmsList} onchangeRate={this.onchangeRate} />
-        {spinner}
-        {this.warningMessage(error)}
-        <Paginate
+
+    const paginationOnRate =()=> {
+      if (searhFilter === 'rated') {
+        return null
+      }
+         return (
+          <Paginate
           pageNumber={pageNumber}
           onchangePagination={this.onchangePagination}
           totalPages={totalPages}
@@ -211,6 +225,23 @@ console.log(this.state);
           error={error}
           filmsList={filmsList}
         />
+        )
+    }
+
+    return (
+      <main>
+        <Header
+          onchangeFilter={this.onchangeFilter}
+          searhFilter={searhFilter}
+        />
+        {searchBar()}
+        <this.GenresContext.Provider value={this.genres}> 
+          <Movies filmsList={filmsList} onchangeRate={this.onchangeRate} />
+          </this.GenresContext.Provider>
+       
+        {spinner}
+        {this.warningMessage(error)}
+       {paginationOnRate()}
       </main>
     )
   }

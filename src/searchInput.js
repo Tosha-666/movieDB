@@ -8,8 +8,14 @@ export default class SearchInput extends React.Component {
   }
 
   render() {
+    const { value } = this.props
     return (
-      <input type="text" className="search-bar" onChange={this.handleClick} />
+      <input
+        type="text"
+        className="search-bar"
+        onChange={this.handleClick}
+        value={value}
+      />
     )
   }
 }

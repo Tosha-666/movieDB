@@ -8,6 +8,7 @@ const MovieCard = function movieCard({
   overview,
   posterPath,
   onchangeRate,
+  rating,
 }) {
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
   const rateId = (value) => {
@@ -19,6 +20,23 @@ const MovieCard = function movieCard({
 
     return localStorage.getItem(ratedFilm) || 0
   }
+
+  const rateColor = () => {
+    if (rating >= 0 && rating < 3) {
+      return 'rate-round red'
+    }
+    if (rating >= 3 && rating < 5) {
+      return 'rate-round orange'
+    }
+    if (rating >= 5 && rating < 7) {
+      return 'rate-round yellow'
+    }
+    if (rating >= 7) {
+      return 'rate-round green'
+    }
+    return 'rate-round'
+  }
+
   return (
     <div className="layout">
       <div>
@@ -39,6 +57,7 @@ const MovieCard = function movieCard({
           onChange={rateId}
           count={10}
         />
+        <span className={rateColor()}>{rating}</span>
       </div>
     </div>
   )

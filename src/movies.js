@@ -11,6 +11,7 @@ const Movies = function movies({ filmsList, onchangeRate }) {
       key={film.id}
       onchangeRate={onchangeRate}
       id={film.id}
+      rating={film.vote_average}
     />
   ))
   return <div className="container">{elements}</div>
