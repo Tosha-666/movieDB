@@ -9,6 +9,8 @@ import ThemoviedbAPI from './services/api'
 import Movies from './movies'
 import Paginate from './pagination'
 import 'antd/dist/antd.css'
+import GenresContext from './genresContext'
+
 
 class App extends React.Component {
   apiService = new ThemoviedbAPI()
@@ -22,16 +24,14 @@ class App extends React.Component {
     totalPages: 0,
     searhFilter: 'rated',
     ratedFilms: [],
+    genres:[]
   }
-
-  
-  GenresContext = React.createContext(this.genres)
-
 
     componentDidMount() {
     // this.updateRated()
+          this.genreList()
           this.rateMenuSelection()
-          this.apiService.getGenres()
+
   }
 
   
@@ -54,7 +54,13 @@ class App extends React.Component {
   }
 
   
-  genres =()=> this.apiService.getGenres()
+  genreList =()=>{
+   const arr =  this.apiService.getGenres()
+   console.log(arr);
+    this.setState({
+      genres:arr
+    })
+  } 
   
   onLabelChange = (e) => {
     this.setState(
@@ -168,6 +174,7 @@ class App extends React.Component {
 
   rateMenuSelection =()=>{
     if (this.state.searhFilter === 'rated') {
+      console.log(this.state);
      this.updateRated()
     }
     if (this.state.searhFilter === 'search') {
@@ -191,7 +198,7 @@ class App extends React.Component {
 
 
   render() {
-    const { filmsList, loading, error, pageNumber, totalPages, searhFilter, value } =
+    const { filmsList, loading, error, pageNumber, totalPages, searhFilter, value, genres} =
       this.state
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
     const searchBar = () => {
@@ -235,9 +242,9 @@ class App extends React.Component {
           searhFilter={searhFilter}
         />
         {searchBar()}
-        <this.GenresContext.Provider value={this.genres}> 
+        <GenresContext.Provider value={genres}> 
           <Movies filmsList={filmsList} onchangeRate={this.onchangeRate} />
-          </this.GenresContext.Provider>
+          </GenresContext.Provider>
        
         {spinner}
         {this.warningMessage(error)}

@@ -9,14 +9,14 @@ export default class ThemoviedbAPI {
       `${this.baseURL}&query=${searching}&page=${pageNumber}`
     )
     if (!res.ok) {
-      console.log(res)
+      // console.log(res)
       throw new Error(res.status)
     }
     const body = await res.json()
     if (body.total_results === 0) {
       throw new Error('not found')
     } else {
-      console.log(body)
+      // console.log(body)
       return body
     }
   }
@@ -26,11 +26,11 @@ export default class ThemoviedbAPI {
       `${this.baseURLforIdsearch}${filmId}?api_key=98450458092ec1ceaf6809681f572de7&language=en-US`
     )
     if (!res.ok) {
-      console.log(res)
+      // console.log(res)
       throw new Error(res.status)
     }
     const body = await res.json()
-    console.log(body)
+    // console.log(body)
     return body
   }
 
