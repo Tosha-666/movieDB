@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react'
 import GenresContext from './genresContext'
 
@@ -5,15 +6,23 @@ import GenresContext from './genresContext'
 
 const GenresCard = function genres({genreItem}){
 
-    const  genreOfFilm =  (genreList) => {
-        // const genreNames = genreList.filter(el =>genres.every(item=>item.id===el.id)
-        //  const genreName = await genreList.find((item)=>item.id===genreItem)
 
-               // return genreName
-        //   )
-          console.log(genreList)
-      
-    }
+
+    
+const  genreOfFilm =  (genreList) => { 
+     console.log(genreList)
+     }
+    // genreList.then(
+    //         result =>{
+    //             const genreName =  result.genres.find((item)=>item.id===genreItem)
+              
+                // resolve(genreName)
+                //  .then((res)=>res.name)
+                // resolve(genreName) 
+                // console.log(; 
+            // }
+            // )
+     
 
     return <GenresContext.Consumer> 
         { 

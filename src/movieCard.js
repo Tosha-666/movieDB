@@ -7,21 +7,24 @@ import GenresCard from './genres'
 
 
 const MovieCard = function movieCard({
+  film,
   id,
   title,
   releaseDate,
   overview,
   posterPath,
-  onchangeRate,
+  onchangeRateFilm,
   rating,
   genres
 }) 
 
 {
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
+
   const rateId = (value) => {
-    onchangeRate(value, id)
+    onchangeRateFilm(value, film)
   }
+  
   const rateOfFilm = () => {
     const keys = Object.keys(localStorage)
     const ratedFilm = keys.find((element) => element == id)
@@ -54,11 +57,11 @@ const genreOfFilm = (genreList)=> {
 
 }
   
-const genresList = genres.map((genreItem)=>
-<GenresCard
-genreItem={genreItem.id}
-/>
-)
+// const genresList = genres.map((genreItem)=>
+// <GenresCard
+// genreItem={genreItem.id}
+// />
+// )
 
   return (
       <div className="layout">
@@ -72,7 +75,7 @@ genreItem={genreItem.id}
       <div className="description">
         <span className="name">{title}</span>
         <span className="date">{releaseDate}</span>
-        <span className="genre" >{genresList}</span>
+        <span className="genre" >Action</span>
         <span className="about">{minimize}</span>
         <Rate
           defaultValue={rateOfFilm()}

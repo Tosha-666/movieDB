@@ -16,7 +16,7 @@ export default class ThemoviedbAPI {
     if (body.total_results === 0) {
       throw new Error('not found')
     } else {
-      // console.log(body)
+      console.log(body)
       return body
     }
   }

@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Spin, Alert } from 'antd'
 import debounce from 'lodash.debounce'
-import Item from 'antd/lib/list/Item'
+// import Item from 'antd/lib/list/Item'
 import Header from './movies/header'
 import SearchInput from './searchInput'
 import ThemoviedbAPI from './services/api'
@@ -10,7 +10,6 @@ import Movies from './movies'
 import Paginate from './pagination'
 import 'antd/dist/antd.css'
 import GenresContext from './genresContext'
-
 
 class App extends React.Component {
   apiService = new ThemoviedbAPI()
@@ -24,17 +23,16 @@ class App extends React.Component {
     totalPages: 0,
     searhFilter: 'rated',
     ratedFilms: [],
-    genres:[]
+    genres: [],
   }
 
-    componentDidMount() {
+
+
+  componentDidMount() {
     // this.updateRated()
-          this.genreList()
-          this.rateMenuSelection()
-
+    this.genreList()
+    // this.rateMenuSelection()
   }
-
-  
 
   componentDidUpdate(prevProps, prevState) {
     const { ratedFilms, searhFilter } = this.state
@@ -44,24 +42,24 @@ class App extends React.Component {
       arr.forEach((element) => {
         localStorage.setItem(element.filmId, element.filmRate)
       })
-      
-      
-          }
-    if (searhFilter!==prevState.searhFilter){
-            this.rateMenuSelection()
-          }
-// console.log(this.state);
+    }
+    if (searhFilter !== prevState.searhFilter) {
+      this.rateMenuSelection()
+    }
+    // console.log(this.state);
   }
 
-  
-  genreList =()=>{
-   const arr =  this.apiService.getGenres()
-   console.log(arr);
-    this.setState({
-      genres:arr
-    })
-  } 
-  
+  genreList = () => {
+    const arr = this.apiService.getGenres()
+    console.log(arr)
+    this.setState(
+      {
+        genres: arr,
+      },
+      () => this.rateMenuSelection()
+    )
+  }
+
   onLabelChange = (e) => {
     this.setState(
       {
@@ -79,8 +77,7 @@ class App extends React.Component {
     // console.log(this.state)
   }
 
-
-  addSearchValue = (searchValue='') => {
+  addSearchValue = (searchValue = '') => {
     this.setState(
       {
         value: searchValue,
@@ -111,12 +108,10 @@ class App extends React.Component {
       case '422':
         return <Alert message="Enter text to search" type="warning" closable />
       case 'not found':
-        if (this.state.filmsList.length!==0){
+        if (this.state.filmsList.length !== 0) {
           return null
-         }
-         return <Alert 
-          message="Films not found" 
-          type="warning" closable />
+        }
+        return <Alert message="Films not found" type="warning" closable />
       case 'Failed to fetch':
         return (
           <Alert
@@ -142,16 +137,31 @@ class App extends React.Component {
 
   showTotal = (total) => `Total ${total} pages`
 
-  onchangeRate = (filmRate, filmId) => {
-    this.setState(({ ratedFilms }) => {
-      const newRatedFilm = { filmId, filmRate }
-      const newArr = [...ratedFilms, newRatedFilm]
-      return {
-        ratedFilms: newArr,
-      }
-    })
+  // onchangeRate = (filmRate, filmId) => {
+  //   this.setState(({ ratedFilms }) => {
+  //     const newRatedFilm = { filmId, filmRate }
+  //     const newArr = [...ratedFilms, newRatedFilm]
+  //     return {
+  //       ratedFilms: newArr,
+  //     }
+  //   })
+  //   // console.log(this.state);
+  // }
+
+  onchangeRateFilm = (filmRate, film) => {
+    const currFilm={...film, userRating:filmRate}
+
+    localStorage.setItem(film.id, JSON.stringify(currFilm))
+    // this.setState(({ ratedFilms }) => {
+    //   const newRatedFilm = { filmId, filmRate }
+    //   const newArr = [...ratedFilms, newRatedFilm]
+    //   return {
+    //     ratedFilms: newArr,
+    //   }
+    // })
     // console.log(this.state);
   }
+
 
   onError = (err) => {
     this.setState({
@@ -172,34 +182,42 @@ class App extends React.Component {
     )
   }
 
-  rateMenuSelection =()=>{
+  rateMenuSelection = () => {
     if (this.state.searhFilter === 'rated') {
-      console.log(this.state);
-     this.updateRated()
+      console.log(this.state)
+      this.updateRated()
     }
     if (this.state.searhFilter === 'search') {
       this.addSearchValue(this.state.value)
-  }
+    }
   }
 
   async updateRated() {
-    const keys = Object.keys(localStorage)
-    const arrofRatedMovies = []
-    for (const key of keys) {
-      arrofRatedMovies.push(this.apiService.getById(key))
-      // console.log(arrofRatedMovies)
+     const arrofRatedMovies = []
+    for (let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+       const currentFilm=JSON.parse (localStorage.getItem(key))
+
+      arrofRatedMovies.push (currentFilm)
     }
+  
     this.setState({
-      filmsList: await Promise.all(arrofRatedMovies),
-      error:''
+      filmsList: arrofRatedMovies,
+      error: '',
     })
   }
 
-
-
   render() {
-    const { filmsList, loading, error, pageNumber, totalPages, searhFilter, value, genres} =
-      this.state
+    const {
+      filmsList,
+      loading,
+      error,
+      pageNumber,
+      totalPages,
+      searhFilter,
+      value,
+      genres,
+    } = this.state
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
     const searchBar = () => {
       if (searhFilter === 'rated') {
@@ -212,19 +230,19 @@ class App extends React.Component {
             addSearchValue={this.addSearchValue}
             loadingFunc={this.loadingFunc}
             pageNumber={pageNumber}
-            value = {value}
+            value={value}
           />
         )
       }
       return null
     }
 
-    const paginationOnRate =()=> {
+    const paginationOnRate = () => {
       if (searhFilter === 'rated') {
         return null
       }
-         return (
-          <Paginate
+      return (
+        <Paginate
           pageNumber={pageNumber}
           onchangePagination={this.onchangePagination}
           totalPages={totalPages}
@@ -232,7 +250,7 @@ class App extends React.Component {
           error={error}
           filmsList={filmsList}
         />
-        )
+      )
     }
 
     return (
@@ -242,13 +260,13 @@ class App extends React.Component {
           searhFilter={searhFilter}
         />
         {searchBar()}
-        <GenresContext.Provider value={genres}> 
-          <Movies filmsList={filmsList} onchangeRate={this.onchangeRate} />
-          </GenresContext.Provider>
-       
+        <GenresContext.Provider value={genres}>
+          <Movies filmsList={filmsList} onchangeRateFilm={this.onchangeRateFilm} />
+        </GenresContext.Provider>
+
         {spinner}
         {this.warningMessage(error)}
-       {paginationOnRate()}
+        {paginationOnRate()}
       </main>
     )
   }
