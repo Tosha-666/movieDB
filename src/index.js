@@ -25,8 +25,6 @@ class App extends React.Component {
     genres: [],
   }
 
-
-
   componentDidMount() {
     // this.updateRated()
     this.genreList()
@@ -45,12 +43,10 @@ class App extends React.Component {
     if (searhFilter !== prevState.searhFilter) {
       this.rateMenuSelection()
     }
-    // console.log(this.state);
   }
 
-  genreList = async() => {
+  genreList = async () => {
     const arr = await this.apiService.getGenres()
-    console.log(arr)
     this.setState(
       {
         genres: arr,
@@ -62,10 +58,10 @@ class App extends React.Component {
   onLabelChange = (e) => {
     this.setState(
       {
-        value: e.target.value,
+        label: e.target.value,
         loading: true,
       },
-      debounce(() => this.addSearchValue(this.state.value), 700)
+      debounce(() => this.addSearchValue(this.state.label), 700)
     )
   }
 
@@ -79,11 +75,11 @@ class App extends React.Component {
   addSearchValue = (searchValue = '') => {
     this.setState(
       {
-        value: searchValue,
+        label: searchValue,
         pageNumber: 1,
         error: '',
       },
-      () => this.updateFilms(this.state.value, this.state.pageNumber)
+      () => this.updateFilms(this.state.label, this.state.pageNumber)
     )
   }
 
@@ -130,30 +126,17 @@ class App extends React.Component {
       {
         pageNumber: page,
       },
-      () => this.updateFilms(this.state.value, this.state.pageNumber)
+      () => this.updateFilms(this.state.label, this.state.pageNumber)
     )
   }
 
   showTotal = (total) => `Total ${total} pages`
 
-  // onchangeRate = (filmRate, filmId) => {
-  //   this.setState(({ ratedFilms }) => {
-  //     const newRatedFilm = { filmId, filmRate }
-  //     const newArr = [...ratedFilms, newRatedFilm]
-  //     return {
-  //       ratedFilms: newArr,
-  //     }
-  //   })
-  //   // console.log(this.state);
-  // }
-
   onchangeRateFilm = (filmRate, film) => {
-    const currFilm={...film, userRating:filmRate}
+    const currFilm = { ...film, userRating: filmRate }
 
     localStorage.setItem(film.id, JSON.stringify(currFilm))
-
   }
-
 
   onError = (err) => {
     this.setState({
@@ -164,34 +147,25 @@ class App extends React.Component {
     // console.log(this.state)
   }
 
-  onLabelChange = (e) => {
-    this.setState(
-      {
-        value: e.target.value,
-        loading: true,
-      },
-      debounce(() => this.addSearchValue(this.state.value), 700)
-    )
-  }
 
   rateMenuSelection = () => {
     if (this.state.searhFilter === 'rated') {
-      console.log(this.state)
+      // console.log(this.state)
       this.updateRated()
     }
     if (this.state.searhFilter === 'search') {
-      this.addSearchValue(this.state.value)
+      this.addSearchValue(this.state.label)
     }
   }
 
-   updateRated() {
-     const arrofRatedMovies = []
-    for (let i=0; i<localStorage.length; i++){
-      const key = localStorage.key(i);
-      const currentFilm=JSON.parse (localStorage.getItem(key))
-      arrofRatedMovies.push (currentFilm)
+  updateRated() {
+    const arrofRatedMovies = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      const currentFilm = JSON.parse(localStorage.getItem(key))
+      arrofRatedMovies.push(currentFilm)
     }
-  
+
     this.setState({
       filmsList: arrofRatedMovies,
       error: '',
@@ -206,10 +180,12 @@ class App extends React.Component {
       pageNumber,
       totalPages,
       searhFilter,
-      value,
+      label,
       genres,
     } = this.state
+
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
+
     const searchBar = () => {
       if (searhFilter === 'rated') {
         return null
@@ -218,10 +194,10 @@ class App extends React.Component {
         return (
           <SearchInput
             onLabelChange={this.onLabelChange}
-            addSearchValue={this.addSearchValue}
-            loadingFunc={this.loadingFunc}
-            pageNumber={pageNumber}
-            value={value}
+            // addSearchValue={this.addSearchValue}
+            // loadingFunc={this.loadingFunc}
+            // pageNumber={pageNumber}
+            label={label}
           />
         )
       }
@@ -252,7 +228,10 @@ class App extends React.Component {
         />
         {searchBar()}
         <GenresContext.Provider value={genres}>
-          <Movies filmsList={filmsList} onchangeRateFilm={this.onchangeRateFilm} />
+          <Movies
+            filmsList={filmsList}
+            onchangeRateFilm={this.onchangeRateFilm}
+          />
         </GenresContext.Provider>
 
         {spinner}

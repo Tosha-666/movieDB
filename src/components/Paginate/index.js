@@ -1,3 +1,3 @@
-import Paginate from "./Paginate";
+import Paginate from './Paginate'
 
 export default Paginate

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Pagination } from 'antd'
+import PropTypes from 'prop-types'
 
 const Paginate = function paginate({
   pageNumber,
@@ -9,6 +10,23 @@ const Paginate = function paginate({
   error,
   filmsList,
 }) {
+  Paginate.defaultProps = {
+    pageNumber: 1,
+    onchangePagination: () => {},
+    totalPages: 1,
+    showTotal: () => {},
+    error: '',
+    filmsList: [],
+  }
+  Paginate.propTypes = {
+    pageNumber: PropTypes.number,
+    onchangePagination: PropTypes.func,
+    totalPages: PropTypes.number,
+    showTotal: PropTypes.func,
+    error: PropTypes.string,
+    filmsList: PropTypes.arrayOf(PropTypes.object),
+  }
+
   if (!error && filmsList.length > 0) {
     return (
       <div className="pagination-container">

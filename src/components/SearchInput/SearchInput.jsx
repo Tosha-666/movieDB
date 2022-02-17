@@ -1,6 +1,17 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export default class SearchInput extends React.Component {
+  static defaultProps = {
+    label: '',
+    onLabelChange: () => {},
+  }
+
+  static propTypes = {
+    onLabelChange: PropTypes.func,
+    label: PropTypes.string,
+  }
+
   onLabelChange = this.props.onLabelChange
 
   handleClick = (e) => {
@@ -8,13 +19,13 @@ export default class SearchInput extends React.Component {
   }
 
   render() {
-    const { value } = this.props
+    const { label } = this.props
     return (
       <input
         type="text"
         className="search-bar"
         onChange={this.handleClick}
-        value={value}
+        value={label}
       />
     )
   }

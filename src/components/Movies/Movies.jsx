@@ -1,7 +1,17 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import MovieCard from '../MovieCard/movieCard'
 
 const Movies = function movies({ filmsList, onchangeRateFilm }) {
+  Movies.defaultProps = {
+    filmsList: [],
+    onchangeRateFilm: () => {},
+  }
+
+  Movies.propTypes = {
+    filmsList: PropTypes.arrayOf(PropTypes.object),
+    onchangeRateFilm: PropTypes.func,
+  }
   const elements = filmsList.map((film) => (
     <MovieCard
       film={film}
@@ -13,7 +23,7 @@ const Movies = function movies({ filmsList, onchangeRateFilm }) {
       onchangeRateFilm={onchangeRateFilm}
       id={film.id}
       rating={film.vote_average}
-      genreIds = {film.genre_ids}
+      genreIds={film.genre_ids}
     />
   ))
   return <div className="container">{elements}</div>
