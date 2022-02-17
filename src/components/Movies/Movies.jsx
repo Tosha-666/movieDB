@@ -1,5 +1,5 @@
 import React from 'react'
-import MovieCard from './movieCard'
+import MovieCard from '../MovieCard/movieCard'
 
 const Movies = function movies({ filmsList, onchangeRateFilm }) {
   const elements = filmsList.map((film) => (
@@ -13,7 +13,7 @@ const Movies = function movies({ filmsList, onchangeRateFilm }) {
       onchangeRateFilm={onchangeRateFilm}
       id={film.id}
       rating={film.vote_average}
-      genres = {film.genres}
+      genreIds = {film.genre_ids}
     />
   ))
   return <div className="container">{elements}</div>

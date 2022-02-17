@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import { Spin, Alert } from 'antd'
 import debounce from 'lodash.debounce'
-// import Item from 'antd/lib/list/Item'
-import Header from './movies/header'
-import SearchInput from './searchInput'
-import ThemoviedbAPI from './services/api'
-import Movies from './movies'
-import Paginate from './pagination'
+import Header from './components/Header'
+import SearchInput from './components/SearchInput'
+import ThemoviedbAPI from './api'
+import Movies from './components/Movies'
+import Paginate from './components/Paginate'
 import 'antd/dist/antd.css'
 import GenresContext from './genresContext'
 
@@ -49,8 +48,8 @@ class App extends React.Component {
     // console.log(this.state);
   }
 
-  genreList = () => {
-    const arr = this.apiService.getGenres()
+  genreList = async() => {
+    const arr = await this.apiService.getGenres()
     console.log(arr)
     this.setState(
       {
@@ -152,14 +151,7 @@ class App extends React.Component {
     const currFilm={...film, userRating:filmRate}
 
     localStorage.setItem(film.id, JSON.stringify(currFilm))
-    // this.setState(({ ratedFilms }) => {
-    //   const newRatedFilm = { filmId, filmRate }
-    //   const newArr = [...ratedFilms, newRatedFilm]
-    //   return {
-    //     ratedFilms: newArr,
-    //   }
-    // })
-    // console.log(this.state);
+
   }
 
 
@@ -192,12 +184,11 @@ class App extends React.Component {
     }
   }
 
-  async updateRated() {
+   updateRated() {
      const arrofRatedMovies = []
     for (let i=0; i<localStorage.length; i++){
       const key = localStorage.key(i);
-       const currentFilm=JSON.parse (localStorage.getItem(key))
-
+      const currentFilm=JSON.parse (localStorage.getItem(key))
       arrofRatedMovies.push (currentFilm)
     }
   
