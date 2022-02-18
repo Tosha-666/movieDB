@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import './SearchInput.scss'
 
 export default class SearchInput extends React.Component {
   static defaultProps = {

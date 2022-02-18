@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Rate } from 'antd'
-import GenresCard from '../Genres/Genres'
+import GenresCard from '../Genres'
+import './MovieCard.scss'
 
 const MovieCard = function movieCard({
   film,
@@ -36,7 +37,9 @@ const MovieCard = function movieCard({
     rating: PropTypes.number,
     genreIds: PropTypes.arrayOf(PropTypes.number),
   }
+
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
+  const minimizeTitle = (title.length>=35)? `${title.slice(0, title.indexOf(' ', 35))} ... `:title
 
   const rateId = (value) => {
     onchangeRateFilm(value, film)
@@ -81,7 +84,7 @@ const MovieCard = function movieCard({
         />
       </div>
       <div className="description">
-        <span className="name">{title}</span>
+        <span className="name">{minimizeTitle}</span>
         <span className="date">{releaseDate}</span>
         <span className="genre">{genresList()}</span>
         <span className="about">{minimize}</span>

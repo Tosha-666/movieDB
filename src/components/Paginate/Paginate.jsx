@@ -1,6 +1,7 @@
 import React from 'react'
 import { Pagination } from 'antd'
 import PropTypes from 'prop-types'
+import './Paginate.scss'
 
 const Paginate = function paginate({
   pageNumber,

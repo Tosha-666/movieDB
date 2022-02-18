@@ -1,19 +1,26 @@
+.body {
+     background-color: #E5E5E5;
+}
 .main {
   width: 1010px;
-  height: 100%;
+  min-height: 100%;
   margin-left: auto;
   margin-right: auto;
-  background-color: #e8e8ff;
+  background-color: #FFFFFF;
   padding-top: 40px;
+  padding-bottom: 40px;
+  padding-left: 36px;
+  padding-right: 36px;
+  box-sizing: content-box;
 }
 
-.header {
+/* .header {
   display: flex;
   justify-content: center;
   margin: 5px;
-}
+} */
 
-.search-bar {
+/* .search-bar {
   display: block;
   width: 90%;
   height: 40px;
@@ -23,19 +30,19 @@
   border: 1px solid #d9d9d9;
   box-sizing: border-box;
   border-radius: 4px;
-}
+} */
 
 .spinner {
   position: absolute !important;
   top: 50%;
   left: 50%;
 }
-.container {
+/* .container {
   display: grid;
   grid-template-columns: 454px 460px;
   justify-content: space-around;
-}
-.layout {
+} */
+/* .layout {
   width: 454px;
   height: 281px;
   background-color: #fff;
@@ -132,9 +139,9 @@
 }
 .layout .description .rate {
   margin-top: 5px;
-}
+} */
 
-.pagination-container {
+/* .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,4 +152,4 @@
   margin-right: auto !important;
   margin-top: 30px !important;
   max-width: 60%;
-}
+} */
