@@ -20,7 +20,7 @@ class App extends React.Component {
     error: '',
     pageNumber: 1,
     totalPages: 0,
-    searhFilter: 'rated',
+    searhFilter: 'search',
     ratedFilms: [],
     genres: [],
   }
