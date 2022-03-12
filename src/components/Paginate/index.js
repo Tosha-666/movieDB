@@ -1,3 +1,1 @@
-import Paginate from './Paginate'
-
-export default Paginate
+export { default as Paginate } from './Paginate'

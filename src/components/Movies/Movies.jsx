@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import MovieCard from '../MovieCard'
+import {MovieCard} from '../MovieCard'
 import './Movies.scss'
 
 const Movies = function movies({ filmsList, onchangeRateFilm }) {

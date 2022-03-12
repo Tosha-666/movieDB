@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Rate } from 'antd'
-import GenresCard from '../Genres'
+import {Genres} from '../Genres'
 import './MovieCard.scss'
 
 const MovieCard = function movieCard({
@@ -74,7 +74,7 @@ const MovieCard = function movieCard({
 
   const genresList = () =>
     genreIds.map((genreItem) => (
-      <GenresCard genreItem={genreItem} key={genreItem} />
+      <Genres genreItem={genreItem} key={genreItem} />
     ))
 
   return (

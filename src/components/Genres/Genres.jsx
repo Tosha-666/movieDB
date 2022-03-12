@@ -2,11 +2,11 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import GenresContext from '../../genresContext'
 
-const GenresCard = function Genres({ genreItem }) {
-  GenresCard.defaultProps = {
+const Genres = function Genres({ genreItem }) {
+  Genres.defaultProps = {
     genreItem: 0,
   }
-  GenresCard.propTypes = {
+  Genres.propTypes = {
     genreItem: PropTypes.number,
   }
 
@@ -18,4 +18,4 @@ const GenresCard = function Genres({ genreItem }) {
   return <span>{genreOfFilm(genre)}</span>
 }
 
-export default GenresCard
+export default Genres

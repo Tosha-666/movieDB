@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
-import Movies from '../Movies'
+import { Movies } from '../Movies'
+import { SearchInput } from '../SearchInput'
 import './Main.scss'
-import SearchInput from '../SearchInput'
+
 
 const Main = function Main({
   onchangeFilter,

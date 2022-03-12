@@ -2,32 +2,31 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './SearchInput.scss'
 
-export default class SearchInput extends React.Component {
-  static defaultProps = {
+const SearchInput = function SearchInput({label, onLabelChange}){
+  SearchInput.defaultProps = {
     label: '',
     onLabelChange: () => {},
   }
 
-  static propTypes = {
+  SearchInput.propTypes = {
     onLabelChange: PropTypes.func,
     label: PropTypes.string,
   }
 
-  onLabelChange = this.props.onLabelChange
-
-  handleClick = (e) => {
-    this.onLabelChange(e)
+  const handleClick = (e) => {
+    onLabelChange(e)
   }
 
-  render() {
-    const { label } = this.props
-    return (
-      <input
-        type="text"
-        className="search-bar"
-        onChange={this.handleClick}
-        value={label}
-      />
-    )
-  }
+  return (
+    <input
+      type="text"
+      className="search-bar"
+      onChange={handleClick}
+      value={label}
+    />
+  )
+
 }
+
+export default SearchInput
+
