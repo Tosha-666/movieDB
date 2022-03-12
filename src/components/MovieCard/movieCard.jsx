@@ -39,7 +39,10 @@ const MovieCard = function movieCard({
   }
 
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
-  const minimizeTitle = (title.length>=35)? `${title.slice(0, title.indexOf(' ', 35))} ... `:title
+  const minimizeTitle =
+    title.length >= 35
+      ? `${title.slice(0, title.indexOf(' ', 35))} ... `
+      : title
 
   const rateId = (value) => {
     onchangeRateFilm(value, film)
@@ -78,7 +81,11 @@ const MovieCard = function movieCard({
     <div className="layout">
       <div>
         <img
-          src={`http://image.tmdb.org/t/p/w500/${posterPath}`}
+          src={
+            posterPath
+              ? `http://image.tmdb.org/t/p/w500/${posterPath}`
+              : 'https://imgholder.ru/183x281/8493a8/adb9ca&text=No+image+available&font=kelson'
+          }
           alt="img"
           className="image"
         />

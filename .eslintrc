@@ -48,7 +48,8 @@
         "checkContextTypes": false,
         "checkChildContextTypes": false
       }
-    ]
+    ],
+    "import/prefer-default-export": "off"
   },
   "settings": {
     "import/resolver": {
@@ -63,7 +64,6 @@
     }
   }
 }
-
 
 // {
 //   "env": {
@@ -111,12 +111,12 @@
 //       }
 //     ]
 //   },
-  // "settings": {
-  //   "import/resolver": {
-  //     "node": {
-  //       "extensions": [".js", ".jsx", ".ts", ".tsx"],
-  //       "moduleDirectory": ["node_modules", "src/"]
-  //     }
-  //   }
-  // }
+// "settings": {
+//   "import/resolver": {
+//     "node": {
+//       "extensions": [".js", ".jsx", ".ts", ".tsx"],
+//       "moduleDirectory": ["node_modules", "src/"]
+//     }
+//   }
+// }
 // }
