@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce'
 import { Main } from '../Main'
 import ThemoviedbAPI from '../../api'
 import { Paginate } from '../Paginate'
-import 'antd/dist/antd.css'
+import  'antd/dist/antd.min.css'
 import GenresContext from '../../genresContext'
 import './App.scss'
 
