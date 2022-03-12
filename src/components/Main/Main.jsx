@@ -5,7 +5,6 @@ import { Movies } from '../Movies'
 import { SearchInput } from '../SearchInput'
 import './Main.scss'
 
-
 const Main = function Main({
   onchangeFilter,
   searhFilter,
@@ -36,7 +35,12 @@ const Main = function Main({
 
   return (
     <header className="header">
-      <Tabs defaultActiveKey={searhFilter} onChange={onchangeFilter} centered>
+      <Tabs
+        defaultActiveKey={searhFilter}
+        onChange={onchangeFilter}
+        centered
+        className="tabs"
+      >
         <TabPane tab="Search" key="search">
           <SearchInput onLabelChange={onLabelChange} label={label} />
           <Movies filmsList={filmsList} onchangeRateFilm={onchangeRateFilm} />

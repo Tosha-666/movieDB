@@ -1,10 +1,10 @@
 import React from 'react'
-import { Spin, Alert } from 'antd'
 import debounce from 'lodash.debounce'
+import { Spin, Alert } from 'antd'
+import { Paginate } from '../Paginate'
 import { Main } from '../Main'
 import ThemoviedbAPI from '../../api'
-import { Paginate } from '../Paginate'
-import  'antd/dist/antd.min.css'
+import 'antd/dist/antd.min.css'
 import GenresContext from '../../genresContext'
 import './App.scss'
 
@@ -25,7 +25,6 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.genreList()
-
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -141,7 +140,6 @@ export default class App extends React.Component {
     // console.log(this.state)
   }
 
-
   rateMenuSelection = () => {
     if (this.state.searhFilter === 'rated') {
       this.updateRated()
@@ -151,7 +149,7 @@ export default class App extends React.Component {
     }
   }
 
-  updateRated=()=> {
+  updateRated = () => {
     const arrofRatedMovies = []
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
@@ -179,7 +177,6 @@ export default class App extends React.Component {
 
     const spinner = loading ? <Spin size="large" className="spinner" /> : null
 
-
     const paginationOnRate = () => {
       if (searhFilter === 'rated') {
         return null
@@ -199,16 +196,16 @@ export default class App extends React.Component {
     return (
       <main>
         <GenresContext.Provider value={genres}>
-        <Main
-          onchangeFilter={this.onchangeFilter}
-          searhFilter={searhFilter}
-          filmsList={filmsList}
-          onchangeRateFilm={this.onchangeRateFilm}
-          onLabelChange={this.onLabelChange}
-          label={label}
-        />
+          <Main
+            onchangeFilter={this.onchangeFilter}
+            searhFilter={searhFilter}
+            filmsList={filmsList}
+            onchangeRateFilm={this.onchangeRateFilm}
+            onLabelChange={this.onLabelChange}
+            label={label}
+          />
         </GenresContext.Provider>
- 
+
         {spinner}
         {this.warningMessage(error)}
         {paginationOnRate()}

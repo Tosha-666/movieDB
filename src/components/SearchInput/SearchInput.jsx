@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './SearchInput.scss'
 
-const SearchInput = function SearchInput({label, onLabelChange}){
+const SearchInput = function SearchInput({ label, onLabelChange }) {
   SearchInput.defaultProps = {
     label: '',
     onLabelChange: () => {},
@@ -25,8 +25,6 @@ const SearchInput = function SearchInput({label, onLabelChange}){
       value={label}
     />
   )
-
 }
 
 export default SearchInput
-
