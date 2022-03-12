@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Rate } from 'antd'
-import {Genres} from '../Genres'
+import { Genres } from '../Genres'
 import './MovieCard.scss'
 
-const MovieCard = function movieCard({
+const MovieCard = function MovieCard({
   film,
   id,
   title,
