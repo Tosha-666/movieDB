@@ -1,7 +1,7 @@
 import React from 'react'
 import debounce from 'lodash.debounce'
 import { Spin, Alert } from 'antd'
-import { Paginate } from '../Paginate'
+import { Paginate } from '../PaginationComponent'
 import { Main } from '../Main'
 import ThemoviedbAPI from '../../api'
 import 'antd/dist/antd.min.css'
