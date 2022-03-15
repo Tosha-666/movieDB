@@ -16,7 +16,6 @@ export default class ThemoviedbAPI {
     if (body.total_results === 0) {
       throw new Error('not found')
     } else {
-      // console.log(body)
       return body
     }
   }
@@ -27,10 +26,10 @@ export default class ThemoviedbAPI {
 
     )
     if (!res.ok) {
-      // console.log(res)
       throw new Error(res.status)
     }
     const body = await res.json()
+    console.log(body)
     return body
   }
 }

@@ -18,12 +18,14 @@ const SearchInput = function SearchInput({ label, onLabelChange }) {
   }
 
   return (
-    <input
+    <label>
+      <input
       type="text"
       className="search-bar"
       onChange={handleClick}
       value={label}
-    />
+    /></label>
+    
   )
 }
 

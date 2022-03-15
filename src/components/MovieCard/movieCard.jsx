@@ -40,8 +40,8 @@ const MovieCard = function MovieCard({
 
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
   const minimizeTitle =
-    title.length >= 35
-      ? `${title.slice(0, title.indexOf(' ', 35))} ... `
+    title.length >= 33
+      ? `${title.slice(0, title.indexOf(' ', 33))} ... `
       : title
 
   const rateId = (value) => {
@@ -73,7 +73,7 @@ const MovieCard = function MovieCard({
   }
 
   const genresList = () =>
-    genreIds.map((genreItem) => (
+    genreIds.slice(0,2).map((genreItem) => (
       <Genres genreItem={genreItem} key={genreItem} />
     ))
 
@@ -91,9 +91,11 @@ const MovieCard = function MovieCard({
         />
       </div>
       <div className="description">
+        <div className='mobile-resolution'>
         <span className="name">{minimizeTitle}</span>
-        <span className="date">{releaseDate}</span>
-        <span className="genre">{genresList()}</span>
+        <span className="date">{releaseDate || ' '}</span>
+        <span className="genre">{genresList()||' '}{genreIds.length>2?'...':''}</span>
+        </div>
         <span className="about">{minimize}</span>
         <Rate
           defaultValue={rateOfFilm()}

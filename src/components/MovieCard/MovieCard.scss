@@ -17,7 +17,10 @@
     flex-direction: column;
     margin-left: 20px;
     margin-top: 12px;
-    .name {
+    .mobile-resolution{
+    display: flex;
+    flex-direction: column;
+     .name {
       font-family: Inter;
       font-style: normal;
       font-weight: normal;
@@ -42,7 +45,16 @@
       line-height: 15px;
       color: rgba(0, 0, 0, 0.65);
       margin-top: 9px;
+      .genre-item{
+        border: 1px solid #D9D9D9;
+        border-radius: 2px;
+        margin-right: 8px;
+        box-sizing: border-box;
+        padding: 2px;
+  }
     }
+    }
+    
     .about {
       font-family: Inter;
       font-style: normal;
@@ -88,4 +100,51 @@
 }
 .ant-rate-star {
   margin-right: 3px !important;
+}
+
+@media (max-width: 480px) {
+  .layout{
+    width: 387px;
+    height: 245px;
+    .image{
+      width: 60px;
+      height: 91px;
+      margin-top: 6px;
+      margin-left: 10px;
+    }
+    .description{
+      margin-top: 4px;
+      .mobile-resolution{
+        height: 91px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+         .date{
+            margin-top: 3px;
+      }
+          .genre{
+            margin-top: 0;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            line-height: 15px;
+            color: rgba(0, 0, 0, 0.65);
+            margin-top: 3px;
+
+            .genre-item{
+              border: 1px solid #D9D9D9;
+              border-radius: 2px;
+              margin-right: 8px;
+        }
+            }
+      }
+
+     
+      
+      .about{
+        margin-left: -80px;
+      }
+    }
+  }
 }
