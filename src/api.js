@@ -29,7 +29,7 @@ export default class ThemoviedbAPI {
       throw new Error(res.status)
     }
     const body = await res.json()
-    console.log(body)
+
     return body
   }
 }
