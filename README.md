@@ -1,1 +1,1 @@
-https://moviedb-cd1itjwtm-tosha-666.vercel.app/
+https://moviedb-axayr1dj0-tosha-666.vercel.app/
