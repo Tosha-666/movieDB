@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import debounce from 'lodash.debounce'
 import { Spin, Alert } from 'antd'
 import { Paginate } from '../PaginationComponent'
@@ -8,95 +8,131 @@ import 'antd/dist/antd.min.css'
 import GenresContext from '../../genresContext'
 import './App.scss'
 
-export default class App extends React.Component {
-  apiService = new ThemoviedbAPI()
+function App() {
+  const apiService = new ThemoviedbAPI()
 
-  state = {
-    label: '',
-    filmsList: [],
-    loading: false,
-    error: '',
-    pageNumber: 1,
-    totalPages: 0,
-    searhFilter: 'rated',
-    ratedFilms: [],
-    genres: [],
-  }
+  const [label, setLabel] = useState('')
+  const [filmsList, setFilmsList] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [pageNumber, setPageNumber] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const [searhFilter, setSearhFilter] = useState('rated')
+  const [ratedFilms, setRatedFilms] = useState([])
+  const [genres, setGenres] = useState([])
 
-  componentDidMount() {
-    this.genreList()
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { ratedFilms, searhFilter } = this.state
-    if (ratedFilms !== prevState.ratedFilms) {
-      const arr = ratedFilms
-      arr.forEach((element) => {
-        localStorage.setItem(element.filmId, element.filmRate)
-      })
+  const updateRated = () => {
+    const arrofRatedMovies = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      const currentFilm = JSON.parse(localStorage.getItem(key))
+      arrofRatedMovies.push(currentFilm)
     }
-    if (searhFilter !== prevState.searhFilter) {
-      this.rateMenuSelection()
-    }
+    setRatedFilms(arrofRatedMovies)
+    setError('')
   }
 
-  genreList = async () => {
-    const arr = await this.apiService.getGenres()
-    this.setState(
-      {
-        genres: arr,
-      },
-      () => this.rateMenuSelection()
-    )
+  const onError = (err) => {
+    setFilmsList([])
+    setError(err.message)
+    setLoading(false)
+    // console.log(this.state)
   }
 
-  onLabelChange = (e) => {
-    this.setState(
-      {
-        label: e.target.value,
-        loading: true,
-      },
-      debounce(() => this.addSearchValue(this.state.label), 700)
-    )
-  }
-
-  onchangeFilter = (filter) => {
-    this.setState({
-      searhFilter: filter,
-    })
-  }
-
-  addSearchValue = (searchValue = '') => {
-    this.setState(
-      {
-        label: searchValue,
-        pageNumber: 1,
-        error: '',
-      },
-      () => this.updateFilms(this.state.label, this.state.pageNumber)
-    )
-  }
-
-  updateFilms = (searchList, pageNumber = 1) => {
-    this.apiService
-      .getResourse(searchList, pageNumber)
+  const updateFilms = (searchList, numberOfPage = 1) => {
+    apiService
+      .getResourse(searchList, numberOfPage)
       .then((res) => {
-        this.setState({
-          filmsList: [...res.results],
-          loading: false,
-          totalPages: res.total_pages,
-        })
+        setFilmsList([...res.results])
+        setLoading(false)
+        setTotalPages(res.total_pages)
       })
 
-      .catch(this.onError)
+      .catch(onError)
   }
 
-  warningMessage = (er) => {
+  const addSearchValue = (searchValue = '') => {
+    console.log(searchValue)
+    // setLabel(searchValue)
+    // setPageNumber(1)
+    setError('')
+    updateFilms(label, pageNumber)
+  }
+
+  const rateMenuSelection = () => {
+    if (searhFilter === 'rated') {
+      updateRated()
+    }
+    if (searhFilter === 'search') {
+      addSearchValue(label)
+    }
+  }
+
+  const genreList = async () => {
+    setGenres(await apiService.getGenres())
+    rateMenuSelection()
+  }
+
+  useEffect(() => {
+    genreList()
+  }, [])
+
+  const debouncedSearch = useCallback(
+    debounce((text) => {
+      addSearchValue(text)
+    }, 1000),
+    [label]
+  )
+
+  // const delayedQuery = useCallback(
+  //   debounce((q: string) => sendQuery(q), 500), // (*)
+  //   []
+  //   );
+
+  useEffect(() => {
+    // addSearchValue(label)
+    // debounce(() => addSearchValue(label), 7000)
+    debouncedSearch(label)
+  }, [debouncedSearch])
+
+  useEffect(() => {
+    // const { ratedFilms, searhFilter } = this.state
+    const arr = ratedFilms
+    arr.forEach((element) => {
+      if (element !== undefined) {
+        localStorage.setItem(element.filmId, element.filmRate)
+      }
+    })
+  }, [ratedFilms])
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { ratedFilms, searhFilter } = this.state
+  //   if (ratedFilms !== prevState.ratedFilms) {
+  //     const arr = ratedFilms
+  //     arr.forEach((element) => {
+  //       localStorage.setItem(element.filmId, element.filmRate)
+  //     })
+  //   }
+  //   if (searhFilter !== prevState.searhFilter) {
+  //     this.rateMenuSelection()
+  //   }
+  // }
+
+  const onLabelChange = (e) => {
+    setLabel(e.target.value)
+    setLoading(false)
+  }
+
+  const onchangeFilter = (filter) => {
+    setSearhFilter(filter)
+  }
+
+  const warningMessage = (er) => {
     switch (er) {
       case '422':
         return <Alert message="Enter text to search" type="warning" closable />
       case 'not found':
-        if (this.state.filmsList.length !== 0) {
+        if (filmsList.length !== 0) {
           return null
         }
         return <Alert message="Films not found" type="warning" closable />
@@ -114,102 +150,66 @@ export default class App extends React.Component {
     }
   }
 
-  onchangePagination = (page) => {
-    this.setState(
-      {
-        pageNumber: page,
-      },
-      () => this.updateFilms(this.state.label, this.state.pageNumber)
-    )
+  const onchangePagination = (page) => {
+    setPageNumber(page)
+    updateFilms(label, pageNumber)
   }
 
-  showTotal = (total) => `Total ${total} pages`
+  const showTotal = (total) => `Total ${total} pages`
 
-  onchangeRateFilm = (filmRate, film) => {
+  const onchangeRateFilm = (filmRate, film) => {
     const currFilm = { ...film, userRating: filmRate }
 
     localStorage.setItem(film.id, JSON.stringify(currFilm))
   }
 
-  onError = (err) => {
-    this.setState({
-      filmsList: [],
-      error: err.message,
-      loading: false,
-    })
-    // console.log(this.state)
-  }
+  // const {
+  //   filmsList,
+  //   loading,
+  //   error,
+  //   pageNumber,
+  //   totalPages,
+  //   searhFilter,
+  //   label,
+  //   genres,
+  // } = this.state
 
-  rateMenuSelection = () => {
-    if (this.state.searhFilter === 'rated') {
-      this.updateRated()
+  const spinner = loading ? <Spin size="large" className="spinner" /> : null
+
+  const paginationOnRate = () => {
+    if (searhFilter === 'rated') {
+      return null
     }
-    if (this.state.searhFilter === 'search') {
-      this.addSearchValue(this.state.label)
-    }
-  }
-
-  updateRated = () => {
-    const arrofRatedMovies = []
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i)
-      const currentFilm = JSON.parse(localStorage.getItem(key))
-      arrofRatedMovies.push(currentFilm)
-    }
-
-    this.setState({
-      filmsList: arrofRatedMovies,
-      error: '',
-    })
-  }
-
-  render() {
-    const {
-      filmsList,
-      loading,
-      error,
-      pageNumber,
-      totalPages,
-      searhFilter,
-      label,
-      genres,
-    } = this.state
-
-    const spinner = loading ? <Spin size="large" className="spinner" /> : null
-
-    const paginationOnRate = () => {
-      if (searhFilter === 'rated') {
-        return null
-      }
-      return (
-        <Paginate
-          pageNumber={pageNumber}
-          onchangePagination={this.onchangePagination}
-          totalPages={totalPages}
-          showTotal={this.showTotal}
-          error={error}
-          filmsList={filmsList}
-        />
-      )
-    }
-
     return (
-      <main>
-        <GenresContext.Provider value={genres}>
-          <Main
-            onchangeFilter={this.onchangeFilter}
-            searhFilter={searhFilter}
-            filmsList={filmsList}
-            onchangeRateFilm={this.onchangeRateFilm}
-            onLabelChange={this.onLabelChange}
-            label={label}
-          />
-        </GenresContext.Provider>
-
-        {spinner}
-        {this.warningMessage(error)}
-        {paginationOnRate()}
-      </main>
+      <Paginate
+        pageNumber={pageNumber}
+        onchangePagination={() => onchangePagination()}
+        totalPages={totalPages}
+        showTotal={() => showTotal()}
+        error={error}
+        filmsList={filmsList}
+      />
     )
   }
+
+  return (
+    <main>
+      <GenresContext.Provider value={genres}>
+        <Main
+          onchangeFilter={onchangeFilter}
+          searhFilter={searhFilter}
+          filmsList={filmsList}
+          ratedFilms={ratedFilms}
+          onchangeRateFilm={onchangeRateFilm}
+          onLabelChange={onLabelChange}
+          label={label}
+        />
+      </GenresContext.Provider>
+
+      {spinner}
+      {warningMessage(error)}
+      {paginationOnRate()}
+    </main>
+  )
 }
+export default App

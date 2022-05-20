@@ -12,6 +12,7 @@ const Main = function Main({
   onchangeRateFilm,
   onLabelChange,
   label,
+  ratedFilms,
 }) {
   Main.defaultProps = {
     label: '',
@@ -20,6 +21,7 @@ const Main = function Main({
     filmsList: [],
     onchangeFilter: () => {},
     searhFilter: 'rated',
+    ratedFilms: [],
   }
 
   Main.propTypes = {
@@ -29,6 +31,7 @@ const Main = function Main({
     filmsList: PropTypes.arrayOf(PropTypes.object),
     onchangeFilter: PropTypes.func,
     searhFilter: PropTypes.string,
+    ratedFilms: PropTypes.arrayOf(PropTypes.object),
   }
 
   const { TabPane } = Tabs
@@ -46,7 +49,7 @@ const Main = function Main({
           <Movies filmsList={filmsList} onchangeRateFilm={onchangeRateFilm} />
         </TabPane>
         <TabPane tab="Rated" key="rated">
-          <Movies filmsList={filmsList} onchangeRateFilm={onchangeRateFilm} />
+          <Movies filmsList={ratedFilms} onchangeRateFilm={onchangeRateFilm} />
         </TabPane>
       </Tabs>
     </header>
