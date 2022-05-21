@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import debounce from 'lodash.debounce'
+import cookie from 'cookie_js'
 import { Spin, Alert } from 'antd'
 import { Paginate } from '../PaginationComponent'
 import { Main } from '../Main'
@@ -20,6 +21,7 @@ function App() {
   const [searhFilter, setSearhFilter] = useState('rated')
   const [ratedFilms, setRatedFilms] = useState([])
   const [genres, setGenres] = useState([])
+  const [guestId, setGuestId] = useState('')
 
   const updateRated = () => {
     const arrofRatedMovies = []
@@ -51,6 +53,21 @@ function App() {
       .catch(onError)
   }
 
+  const setIdToCookie = (dataGuest) => {
+    cookie.set('guest_session_id', dataGuest.guest_session_id)
+    apiService.getRatedMovies(dataGuest.guest_session_id)
+  }
+
+  useEffect(() => {
+    if (!cookie.get('guest_session_id')) {
+      console.log(cookie.get('guest_session_id'))
+      apiService.getGuestSessionId().then((res) => setIdToCookie(res))
+    } else {
+      console.log(cookie.get('guest_session_id'))
+      apiService.getRatedMovies(cookie.get('guest_session_id'))
+    }
+  }, [])
+
   const addSearchValue = (searchValue = '') => {
     console.log(searchValue)
     // setLabel(searchValue)
@@ -77,12 +94,13 @@ function App() {
     genreList()
   }, [])
 
-  const debouncedSearch = useCallback(
-    debounce((text) => {
-      addSearchValue(text)
-    }, 1000),
-    [label]
-  )
+  // const debouncedSearch = useCallback(
+  //   () =>
+  //     debounce((text) => {
+  //       addSearchValue(text)
+  //     }, 1000),
+  //   [addSearchValue]
+  // )
 
   // const delayedQuery = useCallback(
   //   debounce((q: string) => sendQuery(q), 500), // (*)
@@ -90,10 +108,11 @@ function App() {
   //   );
 
   useEffect(() => {
+    // console.log(label)
     // addSearchValue(label)
     // debounce(() => addSearchValue(label), 7000)
-    debouncedSearch(label)
-  }, [debouncedSearch])
+    addSearchValue(label)
+  }, [label])
 
   useEffect(() => {
     // const { ratedFilms, searhFilter } = this.state
@@ -103,7 +122,7 @@ function App() {
         localStorage.setItem(element.filmId, element.filmRate)
       }
     })
-  }, [ratedFilms])
+  }, [])
 
   // componentDidUpdate(prevProps, prevState) {
   //   const { ratedFilms, searhFilter } = this.state
