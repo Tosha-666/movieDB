@@ -20,12 +20,12 @@ const SearchInput = function SearchInput({ label, onLabelChange }) {
   return (
     <label>
       <input
-      type="text"
-      className="search-bar"
-      onChange={handleClick}
-      value={label}
-    /></label>
-    
+        type="text"
+        className="search-bar"
+        onChange={handleClick}
+        value={label}
+      />
+    </label>
   )
 }
 

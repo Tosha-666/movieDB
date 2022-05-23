@@ -19,14 +19,12 @@
   left: 50%;
 }
 @media (max-width: 480px) {
-  .body{
+  .body {
     width: 480px;
-    .main{ 
-    width: 480px;
-    padding-left: 5%;
-    padding-right: 5%;
+    .main {
+      width: 480px;
+      padding-left: 5%;
+      padding-right: 5%;
     }
   }
-  
- 
 }

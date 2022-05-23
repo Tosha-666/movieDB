@@ -1,83 +1,13 @@
-{
-  "extends": ["airbnb", "airbnb/hooks", "eslint-config-prettier", "prettier"],
-  "root": true,
-  "plugins": ["react"],
-  "parser": "babel-eslint",
-  "env": {
-    "browser": true,
-    "jest": true,
-    "es6": true
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  },
-  "rules": {
-    "curly": ["error"],
-    "max-depth": ["warn", 4],
-    "id-length": ["warn", { "exceptions": ["i", "j"], "min": 1 }],
-    "no-lonely-if": ["error"],
-    "no-plusplus": ["off"],
-    "no-restricted-syntax": "off",
-    "class-methods-use-this": "off",
-    "jsx-a11y/href-no-hash": ["off"],
-    "jsx-a11y/anchor-is-valid": ["off"],
-    "jsx-a11y/label-has-associated-control": [
-      "error",
-      {
-        "assert": "either"
-      }
-    ],
-    "jsx-a11y/no-autofocus": ["off"],
-    "react/state-in-constructor": ["off"],
-    "react/jsx-props-no-spreading": ["off"],
-    "react/static-property-placement": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/destructuring-assignment": [
-      2,
-      "always",
-      { "ignoreClassFields": true }
-    ],
-    "react/forbid-prop-types": [
-      1,
-      {
-        "forbid": ["any", "array"],
-        "checkContextTypes": false,
-        "checkChildContextTypes": false
-      }
-    ],
-    "import/prefer-default-export": "off"
-  },
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"],
-        "moduleDirectory": ["node_modules", "src/"]
-      }
-    },
-    "react": {
-      "pragma": "React",
-      "version": "detect"
-    }
-  }
-}
-
 // {
+//   "extends": ["airbnb", "airbnb/hooks", "eslint-config-prettier", "prettier"],
+//   "root": true,
+//   "plugins": ["react"],
+//   "parser": "babel-eslint",
 //   "env": {
 //     "browser": true,
-//     "es2021": true
+//     "jest": true,
+//     "es6": true
 //   },
-//   "ignorePatterns": ["node_modules", "dist", "build"],
-//   "extends": [
-//     "eslint:recommended",
-//     "plugin:react/recommended",
-//     "plugin:prettier/recommended",
-//     "plugin:import/errors",
-//     "plugin:import/warnings"
-//   ],
 //   "parserOptions": {
 //     "ecmaFeatures": {
 //       "jsx": true
@@ -85,38 +15,117 @@
 //     "ecmaVersion": 12,
 //     "sourceType": "module"
 //   },
-//   "plugins": ["react", "prettier", "import"],
 //   "rules": {
-//     "indent": ["error", 2],
-//     "prettier/prettier": "error",
-//     "linebreak-style": [0, "unix"],
-//     "quotes": ["error", "single"],
-//     "semi": ["error", "never"],
-//     "react/react-in-jsx-scope": "off",
-//     "react/prop-types": 0,
-//     "import/no-unresolved": [2, { "caseSensitive": false }],
-//     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-//     "import/order": [
-//       2,
+//     "curly": ["error"],
+//     "max-depth": ["warn", 4],
+//     "id-length": ["warn", { "exceptions": ["i", "j"], "min": 1 }],
+//     "no-lonely-if": ["error"],
+//     "no-plusplus": ["off"],
+//     "no-restricted-syntax": "off",
+//     "class-methods-use-this": "off",
+//     "jsx-a11y/href-no-hash": ["off"],
+//     "jsx-a11y/anchor-is-valid": ["off"],
+//     "jsx-a11y/label-has-associated-control": [
+//       "error",
 //       {
-//         "groups": [
-//           "builtin",
-//           "external",
-//           "internal",
-//           "parent",
-//           "sibling",
-//           "index"
-//         ],
-//         "newlines-between": "always"
+//         "assert": "either"
 //       }
-//     ]
+//     ],
+//     "jsx-a11y/no-autofocus": ["off"],
+//     "react/state-in-constructor": ["off"],
+//     "react/jsx-props-no-spreading": ["off"],
+//     "react/static-property-placement": "off",
+//     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+//     "react/destructuring-assignment": [
+//       2,
+//       "always",
+//       { "ignoreClassFields": true }
+//     ],
+//     "react/forbid-prop-types": [
+//       1,
+//       {
+//         "forbid": ["any", "array"],
+//         "checkContextTypes": false,
+//         "checkChildContextTypes": false
+//       }
+//     ],
+//     "import/prefer-default-export": "off"
 //   },
-// "settings": {
-//   "import/resolver": {
-//     "node": {
-//       "extensions": [".js", ".jsx", ".ts", ".tsx"],
-//       "moduleDirectory": ["node_modules", "src/"]
+//   "settings": {
+//     "import/resolver": {
+//       "node": {
+//         "extensions": [".js", ".jsx", ".ts", ".tsx"],
+//         "moduleDirectory": ["node_modules", "src/"]
+//       }
+//     },
+//     "react": {
+//       "pragma": "React",
+//       "version": "detect"
 //     }
 //   }
 // }
-// }
+
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "ignorePatterns": ["node_modules", "dist", "build"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module",
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  },
+  "plugins": ["react", "prettier", "import"],
+  "parser": "@babel/eslint-parser",
+
+  "rules": {
+    "indent": ["off"],
+    "prettier/prettier": "error",
+    "linebreak-style": [0, "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": 0,
+    "import/no-unresolved": [2, { "caseSensitive": false }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/order": [
+      2,
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always"
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  }
+}

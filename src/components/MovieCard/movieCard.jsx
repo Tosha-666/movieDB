@@ -1,42 +1,51 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Rate } from 'antd'
+import cookie from 'cookie_js'
+
 import { Genres } from '../Genres'
+import ThemoviedbAPI from '../../api'
 import './MovieCard.scss'
 
 const MovieCard = function MovieCard({
-  film,
+  // film,
   id,
   title,
   releaseDate,
   overview,
   posterPath,
-  onchangeRateFilm,
+  // onchangeRateFilm,
   rating,
   genreIds,
+  voteAverage,
 }) {
   MovieCard.defaultProps = {
-    film: 'unknown',
+    // film: 'unknown',
     id: 0,
     title: 'unknown',
     releaseDate: 'unknown',
     overview: 'unknown',
     posterPath: 'unknown',
-    onchangeRateFilm: () => {},
+    // onchangeRateFilm: () => {},
     rating: 0,
     genreIds: [],
+    voteAverage: 0,
   }
+
   MovieCard.propTypes = {
-    film: PropTypes.object,
+    // film: PropTypes.object,
     id: PropTypes.number,
     title: PropTypes.string,
     releaseDate: PropTypes.string,
     overview: PropTypes.string,
     posterPath: PropTypes.string,
-    onchangeRateFilm: PropTypes.func,
+    // onchangeRateFilm: PropTypes.func,
     rating: PropTypes.number,
     genreIds: PropTypes.arrayOf(PropTypes.number),
+    voteAverage: PropTypes.number,
   }
+
+  const apiService = new ThemoviedbAPI()
 
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
   const minimizeTitle =
@@ -44,38 +53,36 @@ const MovieCard = function MovieCard({
       ? `${title.slice(0, title.indexOf(' ', 33))} ... `
       : title
 
-  const rateId = (value) => {
-    onchangeRateFilm(value, film)
-  }
+  // const rateId = (value) => {
+  //   onchangeRateFilm(value, film)
+  // }
 
-  const rateOfFilm = () => {
-    const keys = Object.keys(localStorage)
-    const ratedFilm = keys.find((element) => JSON.parse(element) === id)
-    return ratedFilm
-      ? JSON.parse(localStorage.getItem(ratedFilm)).userRating
-      : 0
+  const rateId = async (rate) => {
+    const token = cookie.get('guest_session_id')
+    const res = await apiService.setMovieRate(id, rate, token)
+    console.log(res)
   }
 
   const rateColor = () => {
-    if (rating >= 0 && rating < 3) {
+    if (voteAverage >= 0 && voteAverage < 3) {
       return 'rate-round red'
     }
-    if (rating >= 3 && rating < 5) {
+    if (voteAverage >= 3 && voteAverage < 5) {
       return 'rate-round orange'
     }
-    if (rating >= 5 && rating < 7) {
+    if (voteAverage >= 5 && voteAverage < 7) {
       return 'rate-round yellow'
     }
-    if (rating >= 7) {
+    if (voteAverage >= 7) {
       return 'rate-round green'
     }
     return 'rate-round'
   }
 
   const genresList = () =>
-    genreIds.slice(0,2).map((genreItem) => (
-      <Genres genreItem={genreItem} key={genreItem} />
-    ))
+    genreIds
+      .slice(0, 2)
+      .map((genreItem) => <Genres genreItem={genreItem} key={genreItem} />)
 
   return (
     <div className="layout">
@@ -91,19 +98,22 @@ const MovieCard = function MovieCard({
         />
       </div>
       <div className="description">
-        <div className='mobile-resolution'>
-        <span className="name">{minimizeTitle}</span>
-        <span className="date">{releaseDate || ' '}</span>
-        <span className="genre">{genresList()||' '}{genreIds.length>2?'...':''}</span>
+        <div className="mobile-resolution">
+          <span className="name">{minimizeTitle}</span>
+          <span className="date">{releaseDate || ' '}</span>
+          <span className="genre">
+            {genresList() || ' '}
+            {genreIds.length > 2 ? '...' : ''}
+          </span>
         </div>
         <span className="about">{minimize}</span>
         <Rate
-          defaultValue={rateOfFilm()}
+          defaultValue={rating}
           className="rate"
           onChange={rateId}
           count={10}
         />
-        <span className={rateColor()}>{rating}</span>
+        <span className={rateColor()}>{voteAverage}</span>
       </div>
     </div>
   )

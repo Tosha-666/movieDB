@@ -1,3 +1,4 @@
+import { findByLabelText } from '@testing-library/react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { MovieCard } from '../MovieCard'
@@ -15,7 +16,7 @@ const Movies = function movies({ filmsList, onchangeRateFilm }) {
   }
   const elements = filmsList.map((film) => (
     <MovieCard
-      film={film}
+      // film={film}
       title={film.title}
       releaseDate={film.release_date}
       overview={film.overview}
@@ -23,7 +24,8 @@ const Movies = function movies({ filmsList, onchangeRateFilm }) {
       key={film.id}
       onchangeRateFilm={onchangeRateFilm}
       id={film.id}
-      rating={film.vote_average}
+      rating={film.rating}
+      voteAverage={film.vote_average}
       genreIds={film.genre_ids}
     />
   ))

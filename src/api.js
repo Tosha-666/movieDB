@@ -10,13 +10,14 @@ export default class ThemoviedbAPI {
       `${this.baseURL}3/search/movie?api_key=98450458092ec1ceaf6809681f572de7&query=&query=${searching}&page=${pageNumber}`
     )
     if (!res.ok) {
-      // console.log(res)
+      console.log(res)
       throw new Error(res.status)
     }
     const body = await res.json()
     if (body.total_results === 0) {
       throw new Error('not found')
     } else {
+      console.log(body)
       return body
     }
   }
@@ -61,9 +62,15 @@ export default class ThemoviedbAPI {
   async setMovieRate(filmId, rating, guestId) {
     const res = await fetch(
       `${this.baseURL}3/movie/${filmId}/rating?api_key=${this.apiKey}&guest_session_id=${guestId}`,
+
       {
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({ 'value': rating }),
         method: 'POST',
-        body: JSON.stringify(rating),
+
+        // body: (rating),
       }
     )
     if (!res.ok) {
@@ -74,3 +81,4 @@ export default class ThemoviedbAPI {
 }
 
 // guest_session_id: "c3e1d53ab8acf7fac94313e968fe3a16"
+// guest_session_id: 7e1a45154f7bd35036314aafa416d207

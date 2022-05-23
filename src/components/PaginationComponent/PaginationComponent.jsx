@@ -34,7 +34,7 @@ const Paginate = function paginate({
         <Pagination
           current={pageNumber}
           className="pagination"
-          onChange={onchangePagination}
+          onChange={(e) => onchangePagination(e)}
           size="large"
           total={totalPages}
           defaultPageSize={1}

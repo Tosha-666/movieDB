@@ -46,10 +46,10 @@ const Main = function Main({
       >
         <TabPane tab="Search" key="search">
           <SearchInput onLabelChange={onLabelChange} label={label} />
-          <Movies filmsList={filmsList} onchangeRateFilm={onchangeRateFilm} />
+          <Movies filmsList={filmsList} />
         </TabPane>
         <TabPane tab="Rated" key="rated">
-          <Movies filmsList={ratedFilms} onchangeRateFilm={onchangeRateFilm} />
+          <Movies filmsList={ratedFilms} />
         </TabPane>
       </Tabs>
     </header>

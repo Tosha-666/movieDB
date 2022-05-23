@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import debounce from 'lodash.debounce'
 import cookie from 'cookie_js'
 import { Spin, Alert } from 'antd'
+
 import { Paginate } from '../PaginationComponent'
 import { Main } from '../Main'
 import ThemoviedbAPI from '../../api'
@@ -23,71 +24,56 @@ function App() {
   const [genres, setGenres] = useState([])
   const [guestId, setGuestId] = useState('')
 
-  const updateRated = () => {
-    const arrofRatedMovies = []
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i)
-      const currentFilm = JSON.parse(localStorage.getItem(key))
-      arrofRatedMovies.push(currentFilm)
-    }
-    setRatedFilms(arrofRatedMovies)
-    setError('')
-  }
-
   const onError = (err) => {
     setFilmsList([])
     setError(err.message)
     setLoading(false)
-    // console.log(this.state)
-  }
-
-  const updateFilms = (searchList, numberOfPage = 1) => {
-    apiService
-      .getResourse(searchList, numberOfPage)
-      .then((res) => {
-        setFilmsList([...res.results])
-        setLoading(false)
-        setTotalPages(res.total_pages)
-      })
-
-      .catch(onError)
   }
 
   const setIdToCookie = (dataGuest) => {
-    cookie.set('guest_session_id', dataGuest.guest_session_id)
-    apiService.getRatedMovies(dataGuest.guest_session_id)
+    cookie.set('guest_session_id', dataGuest, {
+      expires: 31,
+    })
+    setGuestId(dataGuest)
+  }
+
+  const getRated = async (id) => {
+    const movies = await apiService.getRatedMovies(id)
+    console.log(movies)
+    setRatedFilms(movies.results)
   }
 
   useEffect(() => {
     if (!cookie.get('guest_session_id')) {
-      console.log(cookie.get('guest_session_id'))
-      apiService.getGuestSessionId().then((res) => setIdToCookie(res))
+      apiService
+        .getGuestSessionId()
+        .then((res) => setIdToCookie(res.guest_session_id))
     } else {
-      console.log(cookie.get('guest_session_id'))
-      apiService.getRatedMovies(cookie.get('guest_session_id'))
+      setGuestId(cookie.get('guest_session_id'))
     }
   }, [])
 
-  const addSearchValue = (searchValue = '') => {
-    console.log(searchValue)
-    // setLabel(searchValue)
-    // setPageNumber(1)
-    setError('')
-    updateFilms(label, pageNumber)
-  }
+  useEffect(() => {
+    guestId ? getRated(guestId) : null
+  }, [guestId])
+  // то что нужно=======================
+  // useEffect(() => {
+  //   label
+  //     ? apiService
+  //         .getResourse(label, pageNumber)
+  //         .then((res) => {
+  //           setFilmsList([...res.results])
+  //           setLoading(false)
+  //           setTotalPages(res.total_pages)
+  //         })
 
-  const rateMenuSelection = () => {
-    if (searhFilter === 'rated') {
-      updateRated()
-    }
-    if (searhFilter === 'search') {
-      addSearchValue(label)
-    }
-  }
-
+  //         .catch(onError)
+  //     : setLoading(false)
+  // }, [label, pageNumber])
+  // =================================
   const genreList = async () => {
     setGenres(await apiService.getGenres())
-    rateMenuSelection()
+    // rateMenuSelection()
   }
 
   useEffect(() => {
@@ -99,47 +85,99 @@ function App() {
   //     debounce((text) => {
   //       addSearchValue(text)
   //     }, 1000),
-  //   [addSearchValue]
+  //   [label]
   // )
+  // +++++++++++++=======================
+  const delayedQuery = useCallback(
+    debounce((query) => sendQuery(query), 2000),
+    []
+  )
 
+  const sendQuery = useCallback(
+    async (q) => {
+      if (q === '') return
+      setLoading(true)
+      console.log(q)
+      apiService
+        .getResourse(q, pageNumber)
+        .then((res) => {
+          setFilmsList([...res.results])
+          setLoading(false)
+          setTotalPages(res.total_pages)
+        })
+        .catch(onError)
+    },
+    [pageNumber]
+  )
+
+  useEffect(() => {
+    delayedQuery(label, pageNumber) // (*)
+  }, [label, pageNumber, delayedQuery])
+  // ++++++++++++++++===========================
+
+  //+++++++++++++++++++++++++++++++++++++++++
+  // import { useState, useEffect, useCallback } from 'react';
+  // import axios from 'axios';
+  // import { MovieList } from 'types/types';
+  // import { debounce } from 'lodash';
+
+  // function useFetch(query: string, pageNum: number) {
+  //   const [isLoading, setIsLoading] = useState(false);
+  //   const [error, setError] = useState(false);
+  //   const [list, setList] = useState<MovieList>([]);
+  //   const [hasMore, setHasMore] = useState(false);
+
+  //   const delayedQuery = useCallback(
+  //     debounce((q: string) => sendQuery(q), 500), // (*)
+  //     []
+  //   );
+
+  //   const sendQuery = useCallback(
+  //     async (query: string): Promise<any> => {
+  //       if (query === '') return;
+
+  //       try {
+  //         await setIsLoading(true);
+  //         let res = await axios.get(url);
+  //         await setList(prev => [...prev, ...res.data]);
+  //         await setHasMore(data?.length > 0);
+  //         setIsLoading(false);
+  //       } catch (error) {
+  //         setError(error);
+  //       }
+  //     },
+  //     [pageNum]
+  //   );
+
+  //   useEffect(() => {
+  //     setList([]);
+  //   }, [query]);
+
+  //   useEffect(() => {
+  //     delayedQuery(query); // (*)
+  //   }, [query, pageNum, delayedQuery]);
+
+  //   return { isLoading, error, list, hasMore };
+  // }
+
+  // export default useFetch;
+
+  //+++++++++++++++++++++++++++++++++++++++++
   // const delayedQuery = useCallback(
   //   debounce((q: string) => sendQuery(q), 500), // (*)
   //   []
   //   );
 
-  useEffect(() => {
-    // console.log(label)
-    // addSearchValue(label)
-    // debounce(() => addSearchValue(label), 7000)
-    addSearchValue(label)
-  }, [label])
-
-  useEffect(() => {
-    // const { ratedFilms, searhFilter } = this.state
-    const arr = ratedFilms
-    arr.forEach((element) => {
-      if (element !== undefined) {
-        localStorage.setItem(element.filmId, element.filmRate)
-      }
-    })
-  }, [])
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { ratedFilms, searhFilter } = this.state
-  //   if (ratedFilms !== prevState.ratedFilms) {
-  //     const arr = ratedFilms
-  //     arr.forEach((element) => {
-  //       localStorage.setItem(element.filmId, element.filmRate)
-  //     })
-  //   }
-  //   if (searhFilter !== prevState.searhFilter) {
-  //     this.rateMenuSelection()
-  //   }
-  // }
+  // useEffect(() => {
+  //   // console.log(label)
+  //   // addSearchValue(label)
+  //   // debounce(() => addSearchValue(label), 7000)
+  //   addSearchValue(label)
+  // }, [label])
 
   const onLabelChange = (e) => {
     setLabel(e.target.value)
-    setLoading(false)
+    setLoading(true)
   }
 
   const onchangeFilter = (filter) => {
@@ -171,27 +209,10 @@ function App() {
 
   const onchangePagination = (page) => {
     setPageNumber(page)
-    updateFilms(label, pageNumber)
+    // updateFilms(label, pageNumber)
   }
 
   const showTotal = (total) => `Total ${total} pages`
-
-  const onchangeRateFilm = (filmRate, film) => {
-    const currFilm = { ...film, userRating: filmRate }
-
-    localStorage.setItem(film.id, JSON.stringify(currFilm))
-  }
-
-  // const {
-  //   filmsList,
-  //   loading,
-  //   error,
-  //   pageNumber,
-  //   totalPages,
-  //   searhFilter,
-  //   label,
-  //   genres,
-  // } = this.state
 
   const spinner = loading ? <Spin size="large" className="spinner" /> : null
 
@@ -202,7 +223,7 @@ function App() {
     return (
       <Paginate
         pageNumber={pageNumber}
-        onchangePagination={() => onchangePagination()}
+        onchangePagination={onchangePagination}
         totalPages={totalPages}
         showTotal={() => showTotal()}
         error={error}
@@ -219,7 +240,7 @@ function App() {
           searhFilter={searhFilter}
           filmsList={filmsList}
           ratedFilms={ratedFilms}
-          onchangeRateFilm={onchangeRateFilm}
+          // onchangeRateFilm={onchangeRateFilm}
           onLabelChange={onLabelChange}
           label={label}
         />

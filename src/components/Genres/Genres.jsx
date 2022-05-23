@@ -15,7 +15,7 @@ const Genres = function Genres({ genreItem }) {
   const genreOfFilm = (genreList) =>
     genreList.genres.find((item) => item.id === genreItem).name
 
-  return <span className='genre-item'>{genreOfFilm(genre)}</span>
+  return <span className="genre-item">{genreOfFilm(genre)}</span>
 }
 
 export default Genres
