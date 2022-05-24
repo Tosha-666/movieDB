@@ -8,38 +8,35 @@ import ThemoviedbAPI from '../../api'
 import './MovieCard.scss'
 
 const MovieCard = function MovieCard({
-  // film,
   id,
   title,
   releaseDate,
   overview,
   posterPath,
-  // onchangeRateFilm,
+  getRated,
   rating,
   genreIds,
   voteAverage,
 }) {
   MovieCard.defaultProps = {
-    // film: 'unknown',
     id: 0,
     title: 'unknown',
     releaseDate: 'unknown',
     overview: 'unknown',
     posterPath: 'unknown',
-    // onchangeRateFilm: () => {},
+    getRated: () => {},
     rating: 0,
     genreIds: [],
     voteAverage: 0,
   }
 
   MovieCard.propTypes = {
-    // film: PropTypes.object,
     id: PropTypes.number,
     title: PropTypes.string,
     releaseDate: PropTypes.string,
     overview: PropTypes.string,
     posterPath: PropTypes.string,
-    // onchangeRateFilm: PropTypes.func,
+    getRated: PropTypes.func,
     rating: PropTypes.number,
     genreIds: PropTypes.arrayOf(PropTypes.number),
     voteAverage: PropTypes.number,
@@ -53,14 +50,12 @@ const MovieCard = function MovieCard({
       ? `${title.slice(0, title.indexOf(' ', 33))} ... `
       : title
 
-  // const rateId = (value) => {
-  //   onchangeRateFilm(value, film)
-  // }
-
   const rateId = async (rate) => {
     const token = cookie.get('guest_session_id')
     const res = await apiService.setMovieRate(id, rate, token)
-    console.log(res)
+    if (res.ok) {
+      getRated(token)
+    }
   }
 
   const rateColor = () => {

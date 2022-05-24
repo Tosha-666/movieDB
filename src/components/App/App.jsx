@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import debounce from 'lodash.debounce'
 import cookie from 'cookie_js'
 import { Spin, Alert } from 'antd'
@@ -56,124 +56,44 @@ function App() {
   useEffect(() => {
     guestId ? getRated(guestId) : null
   }, [guestId])
-  // то что нужно=======================
-  // useEffect(() => {
-  //   label
-  //     ? apiService
-  //         .getResourse(label, pageNumber)
-  //         .then((res) => {
-  //           setFilmsList([...res.results])
-  //           setLoading(false)
-  //           setTotalPages(res.total_pages)
-  //         })
 
-  //         .catch(onError)
-  //     : setLoading(false)
-  // }, [label, pageNumber])
-  // =================================
   const genreList = async () => {
     setGenres(await apiService.getGenres())
-    // rateMenuSelection()
   }
 
   useEffect(() => {
     genreList()
   }, [])
 
-  // const debouncedSearch = useCallback(
-  //   () =>
-  //     debounce((text) => {
-  //       addSearchValue(text)
-  //     }, 1000),
-  //   [label]
-  // )
-  // +++++++++++++=======================
   const delayedQuery = useCallback(
-    debounce((query) => sendQuery(query), 2000),
-    []
-  )
-
-  const sendQuery = useCallback(
-    async (q) => {
-      if (q === '') return
-      setLoading(true)
-      console.log(q)
-      apiService
-        .getResourse(q, pageNumber)
-        .then((res) => {
-          setFilmsList([...res.results])
-          setLoading(false)
-          setTotalPages(res.total_pages)
-        })
-        .catch(onError)
-    },
+    debounce((query) => sendQuery(query, pageNumber), 500),
     [pageNumber]
   )
 
+  const sendQuery = useCallback(async (q, pageNum) => {
+    if (q === '') {
+      onError({ message: '422' })
+    } else {
+      setLoading(true)
+      console.log(q)
+      apiService
+        .getResourse(q, pageNum)
+        .then((res) => {
+          setFilmsList([...res.results])
+          setLoading(false)
+          setError('')
+          console.log(pageNum)
+          setTotalPages(res.total_pages)
+        })
+        .catch(onError)
+    }
+  }, [])
+
   useEffect(() => {
-    delayedQuery(label, pageNumber) // (*)
+    delayedQuery(label)
+    console.log(label)
+    console.log(pageNumber) // (*)
   }, [label, pageNumber, delayedQuery])
-  // ++++++++++++++++===========================
-
-  //+++++++++++++++++++++++++++++++++++++++++
-  // import { useState, useEffect, useCallback } from 'react';
-  // import axios from 'axios';
-  // import { MovieList } from 'types/types';
-  // import { debounce } from 'lodash';
-
-  // function useFetch(query: string, pageNum: number) {
-  //   const [isLoading, setIsLoading] = useState(false);
-  //   const [error, setError] = useState(false);
-  //   const [list, setList] = useState<MovieList>([]);
-  //   const [hasMore, setHasMore] = useState(false);
-
-  //   const delayedQuery = useCallback(
-  //     debounce((q: string) => sendQuery(q), 500), // (*)
-  //     []
-  //   );
-
-  //   const sendQuery = useCallback(
-  //     async (query: string): Promise<any> => {
-  //       if (query === '') return;
-
-  //       try {
-  //         await setIsLoading(true);
-  //         let res = await axios.get(url);
-  //         await setList(prev => [...prev, ...res.data]);
-  //         await setHasMore(data?.length > 0);
-  //         setIsLoading(false);
-  //       } catch (error) {
-  //         setError(error);
-  //       }
-  //     },
-  //     [pageNum]
-  //   );
-
-  //   useEffect(() => {
-  //     setList([]);
-  //   }, [query]);
-
-  //   useEffect(() => {
-  //     delayedQuery(query); // (*)
-  //   }, [query, pageNum, delayedQuery]);
-
-  //   return { isLoading, error, list, hasMore };
-  // }
-
-  // export default useFetch;
-
-  //+++++++++++++++++++++++++++++++++++++++++
-  // const delayedQuery = useCallback(
-  //   debounce((q: string) => sendQuery(q), 500), // (*)
-  //   []
-  //   );
-
-  // useEffect(() => {
-  //   // console.log(label)
-  //   // addSearchValue(label)
-  //   // debounce(() => addSearchValue(label), 7000)
-  //   addSearchValue(label)
-  // }, [label])
 
   const onLabelChange = (e) => {
     setLabel(e.target.value)
@@ -209,7 +129,6 @@ function App() {
 
   const onchangePagination = (page) => {
     setPageNumber(page)
-    // updateFilms(label, pageNumber)
   }
 
   const showTotal = (total) => `Total ${total} pages`
@@ -240,7 +159,7 @@ function App() {
           searhFilter={searhFilter}
           filmsList={filmsList}
           ratedFilms={ratedFilms}
-          // onchangeRateFilm={onchangeRateFilm}
+          getRated={getRated}
           onLabelChange={onLabelChange}
           label={label}
         />

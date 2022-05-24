@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Tabs } from 'antd'
+
 import { Movies } from '../Movies'
 import { SearchInput } from '../SearchInput'
 import './Main.scss'
@@ -9,7 +10,7 @@ const Main = function Main({
   onchangeFilter,
   searhFilter,
   filmsList,
-  onchangeRateFilm,
+  getRated,
   onLabelChange,
   label,
   ratedFilms,
@@ -22,6 +23,7 @@ const Main = function Main({
     onchangeFilter: () => {},
     searhFilter: 'rated',
     ratedFilms: [],
+    getRated: () => {},
   }
 
   Main.propTypes = {
@@ -32,6 +34,7 @@ const Main = function Main({
     onchangeFilter: PropTypes.func,
     searhFilter: PropTypes.string,
     ratedFilms: PropTypes.arrayOf(PropTypes.object),
+    getRated: PropTypes.func,
   }
 
   const { TabPane } = Tabs
@@ -46,7 +49,7 @@ const Main = function Main({
       >
         <TabPane tab="Search" key="search">
           <SearchInput onLabelChange={onLabelChange} label={label} />
-          <Movies filmsList={filmsList} />
+          <Movies filmsList={filmsList} getRated={getRated} />
         </TabPane>
         <TabPane tab="Rated" key="rated">
           <Movies filmsList={ratedFilms} />
