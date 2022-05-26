@@ -41,7 +41,6 @@ const Paginate = function paginate({
           showTotal={showTotal}
           hideOnSinglePage={false}
           showSizeChanger={false}
-          //   disabled
         />
       </div>
     )

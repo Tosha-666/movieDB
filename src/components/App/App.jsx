@@ -19,10 +19,9 @@ function App() {
   const [error, setError] = useState('')
   const [pageNumber, setPageNumber] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
-  const [searhFilter, setSearhFilter] = useState('rated')
+  const [searhFilter, setSearhFilter] = useState('search')
   const [ratedFilms, setRatedFilms] = useState([])
   const [genres, setGenres] = useState([])
-  const [guestId, setGuestId] = useState('')
 
   const onError = (err) => {
     setFilmsList([])
@@ -30,32 +29,26 @@ function App() {
     setLoading(false)
   }
 
-  const setIdToCookie = (dataGuest) => {
-    cookie.set('guest_session_id', dataGuest, {
-      expires: 31,
-    })
-    setGuestId(dataGuest)
-  }
-
   const getRated = async (id) => {
+    setLoading(true)
     const movies = await apiService.getRatedMovies(id)
-    console.log(movies)
     setRatedFilms(movies.results)
+    setLoading(false)
   }
 
   useEffect(() => {
     if (!cookie.get('guest_session_id')) {
       apiService
         .getGuestSessionId()
-        .then((res) => setIdToCookie(res.guest_session_id))
-    } else {
-      setGuestId(cookie.get('guest_session_id'))
+        .then((res) =>
+          cookie.set('guest_session_id', res.guest_session_id, { expires: 31 })
+        )
     }
   }, [])
 
   useEffect(() => {
-    guestId ? getRated(guestId) : null
-  }, [guestId])
+    if (searhFilter === 'rated') getRated(cookie.get('guest_session_id'))
+  }, [searhFilter])
 
   const genreList = async () => {
     setGenres(await apiService.getGenres())
@@ -75,14 +68,12 @@ function App() {
       onError({ message: '422' })
     } else {
       setLoading(true)
-      console.log(q)
       apiService
         .getResourse(q, pageNum)
         .then((res) => {
           setFilmsList([...res.results])
           setLoading(false)
           setError('')
-          console.log(pageNum)
           setTotalPages(res.total_pages)
         })
         .catch(onError)
@@ -91,8 +82,6 @@ function App() {
 
   useEffect(() => {
     delayedQuery(label)
-    console.log(label)
-    console.log(pageNumber) // (*)
   }, [label, pageNumber, delayedQuery])
 
   const onLabelChange = (e) => {
@@ -107,7 +96,12 @@ function App() {
   const warningMessage = (er) => {
     switch (er) {
       case '422':
-        return <Alert message="Enter text to search" type="warning" closable />
+        if (searhFilter === 'search') {
+          return (
+            <Alert message="Enter text to search" type="warning" closable />
+          )
+        }
+        return null
       case 'not found':
         if (filmsList.length !== 0) {
           return null

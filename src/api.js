@@ -17,7 +17,6 @@ export default class ThemoviedbAPI {
     if (body.total_results === 0) {
       throw new Error('not found')
     } else {
-      console.log(body)
       return body
     }
   }
@@ -54,8 +53,6 @@ export default class ThemoviedbAPI {
       throw new Error(res.status)
     }
     const ratedMovies = await res.json()
-    console.log(guestSessionId)
-    console.log(ratedMovies)
     return ratedMovies
   }
 

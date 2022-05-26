@@ -13,7 +13,6 @@ const MovieCard = function MovieCard({
   releaseDate,
   overview,
   posterPath,
-  getRated,
   rating,
   genreIds,
   voteAverage,
@@ -24,7 +23,6 @@ const MovieCard = function MovieCard({
     releaseDate: 'unknown',
     overview: 'unknown',
     posterPath: 'unknown',
-    getRated: () => {},
     rating: 0,
     genreIds: [],
     voteAverage: 0,
@@ -36,7 +34,6 @@ const MovieCard = function MovieCard({
     releaseDate: PropTypes.string,
     overview: PropTypes.string,
     posterPath: PropTypes.string,
-    getRated: PropTypes.func,
     rating: PropTypes.number,
     genreIds: PropTypes.arrayOf(PropTypes.number),
     voteAverage: PropTypes.number,
@@ -53,9 +50,7 @@ const MovieCard = function MovieCard({
   const rateId = async (rate) => {
     const token = cookie.get('guest_session_id')
     const res = await apiService.setMovieRate(id, rate, token)
-    if (res.ok) {
-      getRated(token)
-    }
+    return res
   }
 
   const rateColor = () => {
