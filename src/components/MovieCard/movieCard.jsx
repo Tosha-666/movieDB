@@ -50,7 +50,23 @@ const MovieCard = function MovieCard({
   const rateId = async (rate) => {
     const token = cookie.get('guest_session_id')
     const res = await apiService.setMovieRate(id, rate, token)
+    if (res.ok) {
+      localStorage.setItem(id, rate)
+    }
+    console.log(res.body)
     return res
+  }
+
+  const rateFunc = (ids) => {
+    console.log(
+      localStorage.getItem(ids) ? JSON.parse(localStorage.getItem(ids)) : 0
+    )
+    if (localStorage.getItem(ids)) {
+      return localStorage.getItem(ids)
+    } else {
+      return 0
+    }
+    // localStorage.getItem(ids) ? localStorage.getItem(ids) : 0
   }
 
   const rateColor = () => {
@@ -98,7 +114,7 @@ const MovieCard = function MovieCard({
         </div>
         <span className="about">{minimize}</span>
         <Rate
-          defaultValue={rating}
+          defaultValue={rateFunc(id)}
           className="rate"
           onChange={rateId}
           count={10}

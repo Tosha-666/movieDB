@@ -14,7 +14,7 @@
   box-sizing: content-box;
 }
 .spinner {
-  position: absolute !important;
+  position: fixed !important;
   top: 50%;
   left: 50%;
 }

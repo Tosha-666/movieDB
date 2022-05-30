@@ -33,6 +33,7 @@ function App() {
     setLoading(true)
     const movies = await apiService.getRatedMovies(id)
     setRatedFilms(movies.results)
+    movies.results.forEach((mov) => localStorage.setItem(mov.id, mov.rating))
     setLoading(false)
   }
 
@@ -71,10 +72,11 @@ function App() {
       apiService
         .getResourse(q, pageNum)
         .then((res) => {
+          console.log(res.total_pages)
+          setTotalPages(res.total_pages)
           setFilmsList([...res.results])
           setLoading(false)
           setError('')
-          setTotalPages(res.total_pages)
         })
         .catch(onError)
     }
@@ -82,6 +84,7 @@ function App() {
 
   useEffect(() => {
     delayedQuery(label)
+    console.log(totalPages)
   }, [label, pageNumber, delayedQuery])
 
   const onLabelChange = (e) => {
@@ -138,7 +141,7 @@ function App() {
         pageNumber={pageNumber}
         onchangePagination={onchangePagination}
         totalPages={totalPages}
-        showTotal={() => showTotal()}
+        showTotal={showTotal}
         error={error}
         filmsList={filmsList}
       />

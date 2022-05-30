@@ -38,7 +38,7 @@ const Paginate = function paginate({
           size="large"
           total={totalPages}
           defaultPageSize={1}
-          showTotal={showTotal}
+          showTotal={() => showTotal(totalPages)}
           hideOnSinglePage={false}
           showSizeChanger={false}
         />
