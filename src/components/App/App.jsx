@@ -72,7 +72,7 @@ function App() {
       apiService
         .getResourse(q, pageNum)
         .then((res) => {
-          console.log(res.total_pages)
+          // console.log(res.total_pages)
           setTotalPages(res.total_pages)
           setFilmsList([...res.results])
           setLoading(false)
@@ -84,7 +84,7 @@ function App() {
 
   useEffect(() => {
     delayedQuery(label)
-    console.log(totalPages)
+    // console.log(totalPages)
   }, [label, pageNumber, delayedQuery])
 
   const onLabelChange = (e) => {
