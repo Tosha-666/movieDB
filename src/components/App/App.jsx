@@ -22,12 +22,28 @@ function App() {
   const [searhFilter, setSearhFilter] = useState('search')
   const [ratedFilms, setRatedFilms] = useState([])
   const [genres, setGenres] = useState([])
+  const [rating, setRating] = useState({})
 
   const onError = (err) => {
     setFilmsList([])
     setError(err.message)
     setLoading(false)
   }
+
+  const getRatingArr = () => {
+    const ratedArr = {}
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i)
+
+      ratedArr[key] = JSON.parse(localStorage.getItem(key))
+    }
+
+    return ratedArr
+  }
+
+  useEffect(() => {
+    setRating(getRatingArr())
+  }, [searhFilter])
 
   const getRated = async (id) => {
     setLoading(true)
@@ -159,6 +175,7 @@ function App() {
           getRated={getRated}
           onLabelChange={onLabelChange}
           label={label}
+          rating={rating}
         />
       </GenresContext.Provider>
 

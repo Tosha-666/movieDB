@@ -13,7 +13,7 @@ const MovieCard = function MovieCard({
   releaseDate,
   overview,
   posterPath,
-  // rating,
+  rating,
   genreIds,
   voteAverage,
 }) {
@@ -23,7 +23,7 @@ const MovieCard = function MovieCard({
     releaseDate: 'unknown',
     overview: 'unknown',
     posterPath: 'unknown',
-    // rating: 0,
+    rating: {},
     genreIds: [],
     voteAverage: 0,
   }
@@ -34,16 +34,15 @@ const MovieCard = function MovieCard({
     releaseDate: PropTypes.string,
     overview: PropTypes.string,
     posterPath: PropTypes.string,
-    // rating: PropTypes.number,
+    rating: PropTypes.object,
     genreIds: PropTypes.arrayOf(PropTypes.number),
     voteAverage: PropTypes.number,
   }
 
   const apiService = new ThemoviedbAPI()
 
-  const [rating, setRating] = useState(0)
+  const [rated, setRated] = useState(0)
 
-  console.log(title, rating)
   const minimize = `${overview.slice(0, overview.indexOf(' ', 175))} ... `
   const minimizeTitle =
     title.length >= 33
@@ -56,49 +55,25 @@ const MovieCard = function MovieCard({
       const res = await apiService.setMovieRate(id, rate, token)
       if (res.ok) {
         localStorage.setItem(id, rate)
-        setRating(rate)
+        setRated(rate)
       }
       return res
     }
   }
-  const getRaitingData = () => {
-    if (localStorage.getItem(id)) {
-      setRating(JSON.parse(localStorage.getItem(id)))
+  const getRaitingData = (ids) => {
+    if (ids) {
+      setRated(rating[ids.toString()])
     } else {
-      setRating(0)
+      setRated(0)
     }
   }
-  useEffect(() => {
-    console.log(title, rating)
-    getRaitingData()
-  }, [])
-
-  useEffect(() => {
-    rateId(rating)
-  }, [rating])
-
   // useEffect(() => {
-  //   // console.log(localStorage.getItem(id))
-  //   const r = JSON.parse(localStorage.getItem(id))
-  //   // console.log(typeof r)
+  //   rateId(rated)
+  // }, [rated])
 
-  //   if (r) {
-  //     console.log(r)
-  //     setRating(r)
-  //     console.log(rating)
-  //   } else {
-  //     setRating(0)
-  //     console.log(rating)
-  //   }
-  // }, [])
-  // const rateFunc = () => {
-  //   console.log(localStorage.getItem(id))
-  //   if (localStorage.getItem(id)) {
-  //     setRating(localStorage.getItem(id))
-  //   } else {
-  //     setRating(0)
-  //   }
-  // }
+  useEffect(() => {
+    getRaitingData(id)
+  }, [rating])
 
   const rateColor = () => {
     if (voteAverage >= 0 && voteAverage < 3) {
@@ -144,13 +119,7 @@ const MovieCard = function MovieCard({
           </span>
         </div>
         <span className="about">{minimize}</span>
-        <Rate
-          // defaultValue={rating}
-          value={rating}
-          className="rate"
-          onChange={setRating}
-          count={10}
-        />
+        <Rate value={rated} className="rate" onChange={rateId} count={10} />
         <span className={rateColor()}>{voteAverage}</span>
       </div>
     </div>

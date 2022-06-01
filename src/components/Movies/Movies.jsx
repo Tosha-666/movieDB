@@ -4,17 +4,24 @@ import React from 'react'
 import { MovieCard } from '../MovieCard'
 import './Movies.scss'
 
-const Movies = function movies({ filmsList, onchangeRateFilm, getRated }) {
+const Movies = function movies({
+  filmsList,
+  onchangeRateFilm,
+  getRated,
+  rating,
+}) {
   Movies.defaultProps = {
     filmsList: [],
     onchangeRateFilm: () => {},
     getRated: () => {},
+    rating: {},
   }
 
   Movies.propTypes = {
     filmsList: PropTypes.arrayOf(PropTypes.object),
     onchangeRateFilm: PropTypes.func,
     getRated: PropTypes.func,
+    rating: PropTypes.object,
   }
 
   return (
@@ -28,10 +35,11 @@ const Movies = function movies({ filmsList, onchangeRateFilm, getRated }) {
           key={film.id}
           onchangeRateFilm={onchangeRateFilm}
           id={film.id}
-          rating={film.rating}
+          // rating={film.rating}
           voteAverage={film.vote_average}
           genreIds={film.genre_ids}
           getRated={getRated}
+          rating={rating}
         />
       ))}
     </div>

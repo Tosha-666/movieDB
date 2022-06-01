@@ -14,6 +14,7 @@ const Main = function Main({
   onLabelChange,
   label,
   ratedFilms,
+  rating,
 }) {
   Main.defaultProps = {
     label: '',
@@ -24,6 +25,7 @@ const Main = function Main({
     searhFilter: 'rated',
     ratedFilms: [],
     getRated: () => {},
+    rating: {},
   }
 
   Main.propTypes = {
@@ -35,6 +37,7 @@ const Main = function Main({
     searhFilter: PropTypes.string,
     ratedFilms: PropTypes.arrayOf(PropTypes.object),
     getRated: PropTypes.func,
+    rating: PropTypes.object,
   }
 
   const { TabPane } = Tabs
@@ -49,10 +52,10 @@ const Main = function Main({
       >
         <TabPane tab="Search" key="search">
           <SearchInput onLabelChange={onLabelChange} label={label} />
-          <Movies filmsList={filmsList} getRated={getRated} />
+          <Movies filmsList={filmsList} getRated={getRated} rating={rating} />
         </TabPane>
         <TabPane tab="Rated" key="rated">
-          <Movies filmsList={ratedFilms} />
+          <Movies filmsList={ratedFilms} rating={rating} />
         </TabPane>
       </Tabs>
     </header>
