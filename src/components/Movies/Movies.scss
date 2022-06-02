@@ -4,12 +4,10 @@
   grid-template-columns: repeat(auto-fit, minmax(465px, 1fr));
   // grid-template-rows: repeat(auto-fit, 281px);
   justify-content: space-between;
-  // width: 938px;
+  width: 935px;
 }
-// @media (max-width: 480px) {
-//   .container {
-//     grid-template-columns: 454px;
-//     justify-content: center;
-//     width: 100%;
-//   }
-// }
+@media (max-width: 860px) {
+  .container {
+    width: auto;
+  }
+}
