@@ -104,7 +104,9 @@
 
 @media (max-width: 480px) {
   .layout {
-    width: 100%;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
     height: 245px;
     .image {
       width: 60px;

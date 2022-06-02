@@ -51,12 +51,17 @@ const MovieCard = function MovieCard({
 
   const rateId = async (rate) => {
     if (rate) {
+      const prevRate = rated
+      setRated(rate)
       const token = cookie.get('guest_session_id')
       const res = await apiService.setMovieRate(id, rate, token)
       if (res.ok) {
         localStorage.setItem(id, rate)
         setRated(rate)
+      } else {
+        setRated(prevRate)
       }
+
       return res
     }
   }
