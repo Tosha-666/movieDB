@@ -12,23 +12,44 @@ import './App.scss'
 
 function App() {
   const apiService = new ThemoviedbAPI()
-
+  // добавление стейта
   const [label, setLabel] = useState('')
-  const [filmsList, setFilmsList] = useState([])
+  const [dataSearchFilms, setDataSearchFilms] = useState({
+    filmsList: [],
+    pageNumber: 1,
+    totalPages: 0,
+  })
+  const [dataRatedFilms, setDataRatedFilms] = useState({
+    filmsList: [],
+    pageNumber: 1,
+    totalPages: 0,
+  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
   const [searhFilter, setSearhFilter] = useState('search')
-  const [ratedFilms, setRatedFilms] = useState([])
+
   const [genres, setGenres] = useState([])
   const [rating, setRating] = useState({})
 
+  //функция для работы с ошибками
+
   const onError = (err) => {
-    setFilmsList([])
+    searhFilter === 'rated'
+      ? setDataRatedFilms({
+          filmsList: [],
+          pageNumber: 1,
+          totalPages: 0,
+        })
+      : setDataSearchFilms({
+          filmsList: [],
+          pageNumber: 1,
+          totalPages: 0,
+        })
     setError(err.message)
     setLoading(false)
   }
+
+  // Получение рейтингов из LocalStorage
 
   const getRatingArr = () => {
     const ratedArr = {}
@@ -45,13 +66,29 @@ function App() {
     setRating(getRatingArr())
   }, [searhFilter])
 
-  const getRated = async (id) => {
+  // Получение и установка рейтинговых фильмов
+
+  const getRated = async (id, pn) => {
+    setError('')
     setLoading(true)
-    const movies = await apiService.getRatedMovies(id)
-    setRatedFilms(movies.results)
+    const movies = await apiService.getRatedMovies(id, pn)
+    console.log(movies)
+    setDataRatedFilms({
+      filmsList: movies.results,
+      pageNumber: movies.page,
+      totalPages: movies.total_pages,
+    })
+
     movies.results.forEach((mov) => localStorage.setItem(mov.id, mov.rating))
     setLoading(false)
   }
+
+  useEffect(() => {
+    if (searhFilter === 'rated')
+      getRated(cookie.get('guest_session_id'), dataRatedFilms.pageNumber)
+  }, [searhFilter])
+
+  // Получение и установка ключа гостевой сессии
 
   useEffect(() => {
     if (!cookie.get('guest_session_id')) {
@@ -63,9 +100,7 @@ function App() {
     }
   }, [])
 
-  useEffect(() => {
-    if (searhFilter === 'rated') getRated(cookie.get('guest_session_id'))
-  }, [searhFilter])
+  // Получение жанров
 
   const genreList = async () => {
     setGenres(await apiService.getGenres())
@@ -75,22 +110,26 @@ function App() {
     genreList()
   }, [])
 
+  // Функция задерки ввода
+
   const delayedQuery = useCallback(
-    debounce((query) => sendQuery(query, pageNumber), 500),
-    [pageNumber]
+    debounce((query) => sendQuery(query), 1000),
+    []
   )
 
-  const sendQuery = useCallback(async (q, pageNum) => {
+  const sendQuery = useCallback(async (q) => {
     if (q === '') {
       onError({ message: '422' })
     } else {
       setLoading(true)
       apiService
-        .getResourse(q, pageNum)
+        .getResourse(q)
         .then((res) => {
-          // console.log(res.total_pages)
-          setTotalPages(res.total_pages)
-          setFilmsList([...res.results])
+          setDataSearchFilms({
+            filmsList: [...res.results],
+            pageNumber: 1,
+            totalPages: res.total_pages,
+          })
           setLoading(false)
           setError('')
         })
@@ -98,10 +137,28 @@ function App() {
     }
   }, [])
 
+  // Изменение страницы для поиска по запросу
+
+  const changePage = async (q, pn) => {
+    setLoading(true)
+    apiService
+      .getResourse(q, pn)
+      .then((res) => {
+        setDataSearchFilms({
+          filmsList: [...res.results],
+          pageNumber: res.page,
+          totalPages: res.total_pages,
+        })
+
+        setLoading(false)
+        setError('')
+      })
+      .catch(onError)
+  }
+
   useEffect(() => {
     delayedQuery(label)
-    // console.log(totalPages)
-  }, [label, pageNumber, delayedQuery])
+  }, [label, delayedQuery])
 
   const onLabelChange = (e) => {
     setLabel(e.target.value)
@@ -122,7 +179,7 @@ function App() {
         }
         return null
       case 'not found':
-        if (filmsList.length !== 0) {
+        if (dataSearchFilms.filmsList.length !== 0) {
           return null
         }
         return <Alert message="Films not found" type="warning" closable />
@@ -140,29 +197,16 @@ function App() {
     }
   }
 
+  //Логика изменения страницы
   const onchangePagination = (page) => {
-    setPageNumber(page)
+    searhFilter === 'rated'
+      ? getRated(cookie.get('guest_session_id'), page)
+      : changePage(label, page)
   }
 
   const showTotal = (total) => `Total ${total} pages`
 
-  const spinner = loading ? <Spin size="large" className="spinner" /> : null
-
-  const paginationOnRate = () => {
-    if (searhFilter === 'rated') {
-      return null
-    }
-    return (
-      <Paginate
-        pageNumber={pageNumber}
-        onchangePagination={onchangePagination}
-        totalPages={totalPages}
-        showTotal={showTotal}
-        error={error}
-        filmsList={filmsList}
-      />
-    )
-  }
+  // const spinner = loading ? <Spin size="large" className="spinner" /> : null
 
   return (
     <main>
@@ -170,8 +214,8 @@ function App() {
         <Main
           onchangeFilter={onchangeFilter}
           searhFilter={searhFilter}
-          filmsList={filmsList}
-          ratedFilms={ratedFilms}
+          filmsList={dataSearchFilms.filmsList}
+          ratedFilms={dataRatedFilms.filmsList}
           getRated={getRated}
           onLabelChange={onLabelChange}
           label={label}
@@ -179,9 +223,28 @@ function App() {
         />
       </GenresContext.Provider>
 
-      {spinner}
+      {loading && <Spin size="large" className="spinner" />}
       {warningMessage(error)}
-      {paginationOnRate()}
+      <Paginate
+        pageNumber={
+          searhFilter === 'rated'
+            ? dataRatedFilms.pageNumber
+            : dataSearchFilms.pageNumber
+        }
+        onchangePagination={onchangePagination}
+        totalPages={
+          searhFilter === 'rated'
+            ? dataRatedFilms.totalPages
+            : dataSearchFilms.totalPages
+        }
+        showTotal={showTotal}
+        error={error}
+        filmsList={
+          searhFilter === 'rated'
+            ? dataRatedFilms.filmsList
+            : dataSearchFilms.filmsList
+        }
+      />
     </main>
   )
 }

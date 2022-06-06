@@ -45,9 +45,9 @@ export default class ThemoviedbAPI {
     return guestId
   }
 
-  async getRatedMovies(guestSessionId) {
+  async getRatedMovies(guestSessionId, pageNum) {
     const res = await fetch(
-      `${this.baseURL}3/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}&language=en-US&sort_by=created_at.asc`
+      `${this.baseURL}3/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}&page=${pageNum}&language=en-US&sort_by=created_at.asc`
     )
     if (!res.ok) {
       throw new Error(res.status)
