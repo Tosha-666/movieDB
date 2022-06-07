@@ -12,6 +12,10 @@
   padding-left: 36px;
   padding-right: 36px;
   box-sizing: content-box;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 .spinner {
   position: fixed !important;
@@ -21,7 +25,7 @@
 @media (max-width: 860px) {
   .body {
     .main {
-      width: 480px;
+      width: 90%;
       padding-left: 5%;
       padding-right: 5%;
     }

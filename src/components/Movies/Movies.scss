@@ -1,13 +1,17 @@
 .container {
-  display: grid;
-  grid-gap: 5px;
-  grid-template-columns: repeat(auto-fit, minmax(465px, 1fr));
-  // grid-template-rows: repeat(auto-fit, 281px);
-  justify-content: space-between;
-  width: 935px;
+  // display: grid;
+  // grid-gap: 5px;
+  // grid-template-columns: repeat(auto-fit, minmax(454px, 1fr));
+
+  // justify-content: space-between;
+
+  // justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 @media (max-width: 860px) {
   .container {
-    width: auto;
+    // width: auto;
   }
 }
