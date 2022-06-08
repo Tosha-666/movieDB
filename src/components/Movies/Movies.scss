@@ -8,13 +8,13 @@
   // justify-items: center;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  .layout:last-child {
-    margin-right: auto;
-  }
+  justify-content: space-between;
+  //   .layout:last-child {
+  //     margin-right: auto;
+  //   }
 }
 @media (max-width: 860px) {
-  .layout:last-child {
-    margin-left: auto;
+  .container {
+    justify-content: space-around;
   }
 }
