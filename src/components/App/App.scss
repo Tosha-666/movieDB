@@ -1,5 +1,14 @@
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .body {
   background-color: #e5e5e5;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 .main {
   width: 1010px;
@@ -16,6 +25,7 @@
   justify-content: center;
   flex-direction: column;
   justify-content: flex-start;
+  overflow-x: hidden;
 }
 .spinner {
   position: fixed !important;
