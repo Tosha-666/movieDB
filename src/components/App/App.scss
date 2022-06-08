@@ -1,14 +1,13 @@
 html {
   width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+
+  // max-width: 100%;
+  // overflow-x: hidden;
 }
 
 .body {
   background-color: #e5e5e5;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+  box-sizing: border-box;
 }
 .main {
   width: 1010px;
