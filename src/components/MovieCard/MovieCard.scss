@@ -27,6 +27,8 @@
         font-size: 20px;
         line-height: 28px;
         width: calc(100% - 20px);
+        max-height: 56px;
+        overflow-y: hidden;
       }
       .date {
         font-family: Inter;
@@ -63,6 +65,8 @@
       line-height: 22px;
       color: #000000;
       margin-top: 10px;
+      max-height: 110px;
+      overflow-y: hidden;
     }
     .rate-round {
       width: 30px;
@@ -96,6 +100,9 @@
     .rate {
       margin-top: 5px;
     }
+    .rate {
+      height: 20px;
+    }
   }
 }
 .ant-rate-star {
@@ -117,7 +124,7 @@
     .description {
       margin-top: 4px;
       .mobile-resolution {
-        height: 91px;
+        height: 96px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -144,6 +151,11 @@
 
       .about {
         margin-left: -80px;
+        margin-top: 4px;
+        max-height: 110px;
+      }
+      .rate {
+        margin-left: -50px;
       }
     }
   }
